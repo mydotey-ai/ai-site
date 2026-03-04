@@ -1,4 +1,4 @@
-# AI-Site 项目
+# 前端通用 gitignore
 
 # 依赖
 node_modules/
@@ -9,10 +9,6 @@ dist/
 build/
 *.local
 
-# Maven
-target/
-!.mvn/wrapper/maven-wrapper.jar
-
 # 日志
 logs/
 *.log
@@ -21,26 +17,10 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# 编辑器
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
-# 操作系统
-.DS_Store
-Thumbs.db
-
 # 环境变量
 .env
 .env.local
 .env.*.local
-
-# 临时文件
-*.tmp
-*.temp
-.cache/
 
 # 测试覆盖率
 coverage/
@@ -49,20 +29,7 @@ coverage/
 # TypeScript
 *.tsbuildinfo
 
-# 数据库文件 (SQLite)
-*.db
-*.sqlite
-*.sqlite3
-data/
-
 # 其他
 .eslintcache
 .stylelintcache
-
-# Java
-*.class
-*.jar
-*.war
-*.ear
-hs_err_pid*
-replay_pid*
+*.tsbuildinfo

@@ -1,0 +1,24 @@
+# Admin 项目 gitignore
+
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# 日志
+*.log
+
+# 测试
+coverage/
+
+# TypeScript
+*.tsbuildinfo
+
+# 编辑器缓存
+.eslintcache

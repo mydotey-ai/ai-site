@@ -1,0 +1,56 @@
+# 后端 gitignore
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+*.swo
+
+# 编译产物
+*.class
+*.jar
+*.war
+*.ear
+
+# 日志
+logs/
+*.log
+
+# 敏感配置
+application-local.yml
+application-local.properties
+
+# 数据库文件 (SQLite)
+*.db
+*.sqlite
+*.sqlite3
+data/
+
+# 临时文件
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# 操作系统
+.DS_Store
+Thumbs.db
