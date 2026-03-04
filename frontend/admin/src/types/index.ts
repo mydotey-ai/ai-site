@@ -27,9 +27,7 @@ export interface User {
   nickname: string
   avatar: string
   bio: string
-  status: number
-  createdAt: string
-  updatedAt: string
+  roles: string[]
 }
 
 // 登录请求
