@@ -1,0 +1,41 @@
+// 颜色变量
+$color-primary: #1890ff;
+$color-success: #52c41a;
+$color-warning: #faad14;
+$color-error: #f5222d;
+
+// 文字颜色
+$color-text-primary: rgba(0, 0, 0, 0.85);
+$color-text-regular: rgba(0, 0, 0, 0.65);
+$color-text-secondary: rgba(0, 0, 0, 0.45);
+
+// 背景颜色
+$color-bg-page: #f5f5f5;
+$color-bg-component: #ffffff;
+
+// 间距
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// 圆角
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+
+// 字体大小
+$font-size-sm: 14px;
+$font-size-md: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 20px;
+$font-size-xxl: 24px;
+
+// 断点
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 1024px;
+$breakpoint-desktop: 1280px;
+
+// 容器宽度
+$container-max-width: 1200px;
