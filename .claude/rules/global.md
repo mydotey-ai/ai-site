@@ -150,3 +150,65 @@ class UserServiceTest {
 - 后端：`application-{profile}.yml`
 - 前端：`.env.{mode}`
 - 示例文件：提供 `.example` 模板
+
+---
+
+## Phase/Plan 完成流程
+
+### 自动文档更新规则
+
+当一个 Phase 或 Plan 完成时，**必须**自动检查和更新相关文档：
+
+### 检查清单
+
+1. **更新 Phase 文档** (`/docs/plans/phases/phase-X-xxx.md`)
+   - 将任务状态从 `[ ]` 更新为 `[x]`
+   - 添加实际完成情况说明
+   - 记录遇到的问题和解决方案
+
+2. **更新计划总览** (`/docs/plans/README.md`)
+   - 更新 Phase 状态（进行中 → 已完成）
+   - 更新完成时间
+
+3. **同步更新相关文档**
+   - 架构文档：如有架构变更
+   - API 文档：如有新增/修改 API
+   - 数据库文档：如有表结构变更
+   - 开发文档：如有新的开发规范或工具
+
+4. **更新 Claude 记忆文件**
+   - `architecture.md`：记录重要架构决策
+   - `conventions.md`：记录新的编码约定
+   - `domain-knowledge.md`：记录领域知识更新
+   - `troubleshooting.md`：记录问题排查经验
+
+### 执行时机
+
+- Phase 所有任务完成时
+- 功能模块开发完成时
+- 重要重构完成时
+- Bug 修复完成时（如有文档影响）
+
+### 示例流程
+
+```
+Phase 完成
+    │
+    ▼
+检查任务清单 ──── 更新 phase-X-xxx.md
+    │
+    ▼
+检查架构变更 ──── 更新 architecture/
+    │
+    ▼
+检查 API 变更 ──── 更新 api/
+    │
+    ▼
+检查数据库变更 ── 更新 database/
+    │
+    ▼
+更新计划总览 ──── 更新 plans/README.md
+    │
+    ▼
+提交文档更新
+```
