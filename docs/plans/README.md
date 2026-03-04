@@ -9,7 +9,7 @@ AI-Site 是一个个人网站项目，包含作品展示、技术博客、创作
 | 阶段 | 名称 | 目标 | 状态 |
 |------|------|------|------|
 | Phase 0 | 项目设置 | 建立项目结构、规范、文档框架 | ✅ 已完成 |
-| Phase 1 | 基础设施 | 配置、安全、数据库基础设施 | 待开始 |
+| Phase 1 | 基础设施 | 配置、安全、数据库基础设施 | ✅ 已完成 |
 | Phase 2 | 认证模块 | 用户注册、登录、权限管理 | 待开始 |
 | Phase 3 | 博客模块 | 文章、分类、标签管理 | 待开始 |
 | Phase 4 | 作品集模块 | 项目、技能、经历展示 | 待开始 |
@@ -21,7 +21,7 @@ AI-Site 是一个个人网站项目，包含作品展示、技术博客、创作
 详细阶段文档位于 [phases/](./phases/) 目录：
 
 - [Phase 0: 项目设置](./phases/phase-0-project-setup.md) - ✅ 已完成 (2026-03-04)
-- [Phase 1: 基础设施](./phases/phase-1-infrastructure.md)
+- [Phase 1: 基础设施](./phases/phase-1-infrastructure.md) - ✅ 已完成 (2026-03-04)
 - [Phase 2: 认证模块](./phases/phase-2-auth-module.md)
 - [Phase 3: 博客模块](./phases/phase-3-blog-module.md)
 - [Phase 4: 作品集模块](./phases/phase-4-portfolio-module.md)
