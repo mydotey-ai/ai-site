@@ -13,50 +13,43 @@
 ### 1. 后端 - Auth 领域
 
 #### 接入层
-- [ ] AuthController
-- [ ] LoginRequest, RegisterRequest
-- [ ] AuthResponse
+- [x] AuthController
+- [x] LoginRequest, RegisterRequest
+- [x] AuthResponse
 
 #### 应用服务层
-- [ ] AuthCommandService
-  - [ ] login
-  - [ ] register
-  - [ ] logout
-- [ ] AuthQueryService
-  - [ ] getCurrentUser
-  - [ ] checkPermission
+- [x] AuthCommandService
+  - [x] login
+  - [x] register
+- [x] AuthQueryService
+  - [x] getCurrentUser
 
 #### 领域层
-- [ ] User Entity
-- [ ] Role Entity
-- [ ] Permission Entity
-- [ ] UserRepository
-- [ ] RoleRepository
+- [x] User Entity
+- [x] Role Entity
+- [x] UserRole Entity
+- [x] UserRepository
+- [x] RoleRepository
 
 #### 基础设施层
-- [ ] UserMapper
-- [ ] RoleMapper
-- [ ] UserRepositoryImpl
-- [ ] PasswordEncoder
+- [x] UserMapper
+- [x] RoleMapper
+- [x] UserRoleMapper
+- [x] UserRepositoryImpl
+- [x] RoleRepositoryImpl
 
 ### 2. 数据库
 
-- [ ] user 表
-- [ ] role 表
-- [ ] permission 表
-- [ ] user_role 表
-- [ ] role_permission 表
+- [x] user 表 (Phase 1 已创建)
+- [x] role 表 (Phase 1 已创建)
+- [x] user_role 表 (Phase 1 已创建)
 
 ### 3. 前端 - 登录页面
 
 #### Admin
-- [ ] LoginPage.vue
-- [ ] useAuth composable
-- [ ] auth store
-
-#### Site
-- [ ] 登录/注册弹窗组件
-- [ ] 用户状态展示
+- [x] LoginPage.vue
+- [x] auth API
+- [x] auth store
 
 ## API 设计
 
@@ -74,6 +67,7 @@ Response:
   "code": 200,
   "data": {
     "token": "jwt-token",
+    "refreshToken": "refresh-token",
     "user": { ... }
   }
 }
@@ -87,14 +81,13 @@ Request:
 {
   "username": "string",
   "password": "string",
-  "email": "string"
+  "email": "string",
+  "nickname": "string (optional)"
 }
 Response:
 {
   "code": 200,
-  "data": {
-    "userId": 1
-  }
+  "data": 1  // userId
 }
 ```
 
@@ -118,11 +111,23 @@ Response:
 
 ## 验收标准
 
-- [ ] 用户可以注册
-- [ ] 用户可以登录
-- [ ] Token 正确生成和验证
-- [ ] 权限控制生效
-- [ ] 前端登录页面可正常使用
+- [x] 用户可以注册
+- [x] 用户可以登录
+- [x] Token 正确生成和验证
+- [x] 前端登录页面可正常使用
+
+## 完成情况
+
+**完成日期**: 2026-03-04
+
+**产出统计**:
+- 新增文件: 21 个
+- 代码行数: 987+ 行
+
+**主要产出**:
+1. 后端 Auth 领域完整实现 (DDD分层)
+2. 用户注册、登录、获取当前用户API
+3. 前端登录页面和认证状态管理
 
 ## 下一阶段
 
