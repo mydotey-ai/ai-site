@@ -28,12 +28,10 @@ sudo cp -r frontend/site/dist /var/www/ai-site/site
 
 ```bash
 # 复制 JAR 文件
-sudo cp backend/api/target/api.jar /opt/ai-site/
-sudo cp backend/admin/target/admin.jar /opt/ai-site/
+sudo cp backend/service/target/service.jar /opt/ai-site/
 
 # 启动服务
-sudo systemctl start ai-site-api
-sudo systemctl start ai-site-admin
+sudo systemctl start ai-site-service
 ```
 
 ## 配置文件

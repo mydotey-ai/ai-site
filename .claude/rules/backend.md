@@ -20,52 +20,63 @@
 ### 模块结构
 ```
 backend/
-├── common/          # 公共模块
-├── api/             # API 模块 (对外服务)
-├── admin/           # Admin 模块 (管理后台)
-├── pom.xml          # 父 POM
-└── mvnw             # Maven Wrapper
+├── common/              # 公共模块
+├── service/             # 服务模块 (对外服务 + 管理后台)
+├── pom.xml              # 父 POM
+└── mvnw                 # Maven Wrapper
 ```
 
 ### DDD 分层结构
 ```
 org.mydotey.ai.site/
-├── common/                # 公共模块
-└── {domain}/              # 领域模块
-    ├── controller/        # 接入层
-    ├── dto/               # 接入层 - DTO
-    ├── command/           # 应用服务层 - 写操作
-    ├── query/             # 应用服务层 - 读操作
-    ├── job/               # 应用服务层 - 定时任务
-    ├── entity/            # 领域层 - 实体
-    ├── repository/        # 领域层 - 仓储接口
-    ├── enums/             # 领域层 - 枚举
-    └── service/           # 领域层 - 领域服务 (可选)
-
-infrastructure/            # 基础设施层
-├── persistence/
-│   ├── mapper/            # MyBatis Mapper
-│   ├── repository/        # Repository 实现
-│   └── converter/         # 对象转换器
-├── security/
-└── storage/
+├── common/                    # 公共包
+│   └── domain/                # 公共领域组件
+│       ├── interfaces/        # 接入层基类/组件
+│       ├── application/       # 应用服务层基类/组件
+│       ├── domain/            # 领域层基类/组件
+│       └── infrastructure/    # 基础设施层基类/组件
+└── {domain}/                  # 领域包
+    ├── interfaces/            # 接入层
+    │   ├── controller/        # HTTP 接口
+    │   ├── dto/               # 数据传输对象
+    │   └── assembler/         # DTO 转换器
+    ├── application/           # 应用服务层
+    │   ├── command/           # 写操作
+    │   ├── query/             # 读操作
+    │   └── job/               # 定时任务
+    ├── domain/                # 领域层
+    │   ├── entity/            # 领域实体
+    │   ├── repository/        # 仓储接口
+    │   ├── enums/             # 枚举
+    │   └── service/           # 领域服务 (可选)
+    └── infrastructure/        # 基础设施层
+        ├── persistence/
+        │   ├── mapper/        # MyBatis Mapper
+        │   ├── repository/    # Repository 实现
+        │   └── converter/     # 对象转换器
+        ├── security/
+        └── storage/
 ```
+
+**分包原则**：领域简单时，各层直接放类文件，无需再分包；领域复杂时，再按功能分子包。
 
 ---
 
 ## 编码规范
 
-### 包命名
+### 命名规范
 
-| 类型 | 包路径 | 说明 |
-|------|--------|------|
-| 公共配置 | `org.mydotey.ai.site.common.config` | 配置类 |
-| 公共异常 | `org.mydotey.ai.site.common.exception` | 异常处理 |
-| 公共响应 | `org.mydotey.ai.site.common.response` | 统一响应 |
-| 领域模块 | `org.mydotey.ai.site.{domain}` | 领域代码 |
-| 基础设施 | `org.mydotey.ai.site.infrastructure` | 基础设施 |
+| 类型 | 规范 | 示例 |
+|------|------|------|
+| 类名 | PascalCase | `UserServiceImpl`, `ArticleController` |
+| 接口名 | PascalCase | `ArticleRepository`, `UserService` |
+| 方法名 | camelCase | `getUserById()`, `createArticle()` |
+| 变量名 | camelCase | `userName`, `articleList` |
+| 常量名 | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT`, `DEFAULT_PAGE_SIZE` |
+| 包名 | 全小写 | `org.mydotey.ai.site.blog` |
+| 包文件夹 | 全小写 | `controller/`, `service/`, `repository/` |
 
-### 类命名
+### 类命名约定
 
 | 类型 | 后缀 | 示例 |
 |------|------|------|
@@ -82,333 +93,69 @@ infrastructure/            # 基础设施层
 | Repository (实现) | RepositoryImpl | `ArticleRepositoryImpl` |
 | Mapper | Mapper | `ArticleMapper` |
 
+### 代码风格
+
+- 单个文件不超过 500 行
+- 单个方法不超过 50 行
+- 单个类职责单一
+- 避免深层嵌套（最多 3 层）
+- 类注释：说明类的职责和用途
+- 方法注释：说明方法的功能、参数、返回值
+- 复杂逻辑：添加必要的行内注释
+- 避免无意义的注释
+
 ### Controller 规范
 
-```java
-@RestController
-@RequestMapping("/api/v1/articles")
-@Tag(name = "Article", description = "文章管理接口")
-@Validated
-@RequiredArgsConstructor
-public class ArticleController {
-
-    private final ArticleQueryService queryService;
-    private final ArticleCommandService commandService;
-
-    @GetMapping
-    @Operation(summary = "获取文章列表")
-    public Result<PageResult<ArticleVO>> list(@Valid ArticleListQuery query) {
-        return Result.success(queryService.list(query));
-    }
-
-    @GetMapping("/{id}")
-    @Operation(summary = "获取文章详情")
-    public Result<ArticleVO> get(@PathVariable Long id) {
-        return Result.success(queryService.getById(id));
-    }
-
-    @PostMapping
-    @Operation(summary = "创建文章")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Result<Long> create(@Valid @RequestBody CreateArticleRequest request) {
-        return Result.success(commandService.create(request.toCommand()));
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "更新文章")
-    public Result<Void> update(@PathVariable Long id,
-                               @Valid @RequestBody UpdateArticleRequest request) {
-        commandService.update(request.toCommand(id));
-        return Result.success();
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "删除文章")
-    public Result<Void> delete(@PathVariable Long id) {
-        commandService.delete(id);
-        return Result.success();
-    }
-}
-```
+- 使用 `@RestController` + `@RequestMapping`
+- 注入 QueryService 和 CommandService
+- GET 请求返回查询结果，POST/PUT/DELETE 调用 CommandService
+- 使用 `@Valid` 验证请求参数
+- 使用 `@Tag` 和 `@Operation` 注解生成 API 文档
 
 ### Entity 规范
 
-```java
-@Data
-@TableName("article")
-public class Article extends BaseEntity {
-
-    @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
-
-    private String title;
-
-    private String slug;
-
-    private String summary;
-
-    private String content;
-
-    private String coverImage;
-
-    private Long categoryId;
-
-    private ArticleStatus status;
-
-    private Integer viewCount;
-
-    private Integer likeCount;
-
-    private Boolean isTop;
-
-    private LocalDateTime publishedAt;
-
-    @TableLogic
-    private Integer deleted;
-
-    @TableField(exist = false)
-    private List<Tag> tags;
-}
-```
+- 使用 `@Data` + `@TableName`
+- 主键使用 `@TableId(type = IdType.ASSIGN_ID)`
+- 逻辑删除使用 `@TableLogic`
+- 非数据库字段使用 `@TableField(exist = false)`
 
 ### Repository 规范
 
-```java
-// 领域层 - 接口
-public interface ArticleRepository {
-    Article findById(Long id);
-    Article findBySlug(String slug);
-    Page<Article> findAll(PageQuery query);
-    void save(Article article);
-    void deleteById(Long id);
-}
+- 领域层定义接口，基础设施层实现
+- 实现类使用 `@Repository` + `@RequiredArgsConstructor`
+- save 方法根据 id 是否为空决定 insert 或 update
 
-// 基础设施层 - 实现
-@Repository
-@RequiredArgsConstructor
-public class ArticleRepositoryImpl implements ArticleRepository {
+### Service 规范
 
-    private final ArticleMapper mapper;
+- CommandService 使用 `@Transactional`（写操作）
+- QueryService 使用 `@Transactional(readOnly = true)`（读操作）
+- 使用 `@Service` + `@RequiredArgsConstructor`
 
-    @Override
-    public Article findById(Long id) {
-        return mapper.selectById(id);
-    }
+---
 
-    @Override
-    public void save(Article article) {
-        if (article.getId() == null) {
-            mapper.insert(article);
-        } else {
-            mapper.updateById(article);
-        }
-    }
+## 安全规范
 
-    // ... 其他方法实现
-}
-```
-
-### Command Service 规范
-
-```java
-@Service
-@RequiredArgsConstructor
-@Transactional
-public class ArticleCommandService {
-
-    private final ArticleRepository articleRepository;
-    private final CategoryRepository categoryRepository;
-
-    public Long create(CreateArticleCommand command) {
-        // 验证分类存在
-        Category category = categoryRepository.findById(command.getCategoryId());
-        if (category == null) {
-            throw new BusinessException(ErrorCode.CATEGORY_NOT_FOUND);
-        }
-
-        // 创建文章
-        Article article = new Article();
-        article.setTitle(command.getTitle());
-        article.setSlug(generateSlug(command.getTitle()));
-        article.setContent(command.getContent());
-        article.setCategoryId(command.getCategoryId());
-        article.setStatus(ArticleStatus.DRAFT);
-
-        articleRepository.save(article);
-        return article.getId();
-    }
-
-    public void update(UpdateArticleCommand command) {
-        Article article = articleRepository.findById(command.getId());
-        if (article == null) {
-            throw new BusinessException(ErrorCode.ARTICLE_NOT_FOUND);
-        }
-
-        // 更新字段
-        article.setTitle(command.getTitle());
-        article.setContent(command.getContent());
-
-        articleRepository.save(article);
-    }
-
-    public void delete(Long id) {
-        articleRepository.deleteById(id);
-    }
-
-    private String generateSlug(String title) {
-        return SlugUtils.generate(title);
-    }
-}
-```
-
-### Query Service 规范
-
-```java
-@Service
-@RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class ArticleQueryService {
-
-    private final ArticleMapper articleMapper;
-
-    public ArticleVO getById(Long id) {
-        Article article = articleMapper.selectById(id);
-        if (article == null) {
-            throw new BusinessException(ErrorCode.ARTICLE_NOT_FOUND);
-        }
-        return ArticleConverter.toVO(article);
-    }
-
-    public PageResult<ArticleVO> list(ArticleListQuery query) {
-        Page<Article> page = articleMapper.selectPage(
-            new Page<>(query.getPage(), query.getSize()),
-            new LambdaQueryWrapper<Article>()
-                .eq(query.getStatus() != null, Article::getStatus, query.getStatus())
-                .eq(query.getCategoryId() != null, Article::getCategoryId, query.getCategoryId())
-                .like(StringUtils.hasText(query.getKeyword()), Article::getTitle, query.getKeyword())
-                .orderByDesc(Article::getIsTop)
-                .orderByDesc(Article::getCreatedAt)
-        );
-
-        return PageResult.of(
-            page.getRecords().stream().map(ArticleConverter::toVO).toList(),
-            page.getTotal()
-        );
-    }
-}
-```
+- API 接口需要权限控制
+- 防止 SQL 注入：使用参数化查询，避免拼接 SQL
+- 密码使用 BCrypt 加密存储
+- 敏感配置使用环境变量注入
+- 接口限流，防止暴力攻击
 
 ---
 
 ## 异常处理
 
-### 异常定义
-
-```java
-// 业务异常
-@Getter
-public class BusinessException extends RuntimeException {
-    private final ErrorCode errorCode;
-
-    public BusinessException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
-    }
-}
-
-// 错误码
-@Getter
-@AllArgsConstructor
-public enum ErrorCode {
-    // 通用错误
-    BAD_REQUEST(40000, "请求参数错误"),
-    UNAUTHORIZED(40100, "未授权访问"),
-    FORBIDDEN(40300, "禁止访问"),
-    NOT_FOUND(40400, "资源不存在"),
-
-    // 业务错误
-    ARTICLE_NOT_FOUND(40401, "文章不存在"),
-    CATEGORY_NOT_FOUND(40402, "分类不存在"),
-    DUPLICATE_TITLE(40001, "标题已存在");
-
-    private final int code;
-    private final String message;
-}
-```
-
-### 全局异常处理
-
-```java
-@RestControllerAdvice
-@Slf4j
-public class GlobalExceptionHandler {
-
-    @ExceptionHandler(BusinessException.class)
-    public Result<Void> handleBusinessException(BusinessException e) {
-        log.warn("Business exception: {}", e.getMessage());
-        return Result.error(e.getErrorCode().getCode(), e.getMessage());
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Result<Void> handleValidationException(MethodArgumentNotValidException e) {
-        String message = e.getBindingResult().getFieldErrors().stream()
-            .map(FieldError::getDefaultMessage)
-            .collect(Collectors.joining(", "));
-        return Result.error(ErrorCode.BAD_REQUEST.getCode(), message);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public Result<Void> handleException(Exception e) {
-        log.error("Unexpected exception", e);
-        return Result.error(50000, "系统错误");
-    }
-}
-```
+- 业务异常使用 `BusinessException`，包含 `ErrorCode`
+- 错误码使用枚举定义，包含 code 和 message
+- 全局异常处理器使用 `@RestControllerAdvice`
+- 处理 `BusinessException`、`MethodArgumentNotValidException`、`Exception`
 
 ---
 
 ## 统一响应
 
-### Result 类
-
-```java
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Result<T> {
-    private int code;
-    private String message;
-    private T data;
-    private LocalDateTime timestamp;
-
-    public static <T> Result<T> success(T data) {
-        return new Result<>(200, "success", data, LocalDateTime.now());
-    }
-
-    public static <T> Result<T> success() {
-        return success(null);
-    }
-
-    public static <T> Result<T> error(int code, String message) {
-        return new Result<>(code, message, null, LocalDateTime.now());
-    }
-}
-```
-
-### PageResult 类
-
-```java
-@Data
-@AllArgsConstructor
-public class PageResult<T> {
-    private List<T> list;
-    private long total;
-
-    public static <T> PageResult<T> of(List<T> list, long total) {
-        return new PageResult<>(list, total);
-    }
-}
-```
+- 使用 `Result<T>` 包装响应，包含 code、message、data、timestamp
+- 分页使用 `PageResult<T>`，包含 list 和 total
 
 ---
 
@@ -432,192 +179,40 @@ public class PageResult<T> {
 - 唯一约束字段创建唯一索引
 
 ### Flyway 迁移
-
-```sql
--- V1.0.0__init_schema.sql
-
--- 用户表
-CREATE TABLE `user` (
-    `id` BIGINT PRIMARY KEY,
-    `username` VARCHAR(50) NOT NULL,
-    `password` VARCHAR(255) NOT NULL,
-    `email` VARCHAR(100),
-    `nickname` VARCHAR(50),
-    `avatar` VARCHAR(255),
-    `status` TINYINT DEFAULT 1,
-    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY `uk_username` (`username`),
-    UNIQUE KEY `uk_email` (`email`)
-);
-
--- 文章表
-CREATE TABLE `article` (
-    `id` BIGINT PRIMARY KEY,
-    `title` VARCHAR(200) NOT NULL,
-    `slug` VARCHAR(200) NOT NULL,
-    `summary` VARCHAR(500),
-    `content` LONGTEXT,
-    `cover_image` VARCHAR(255),
-    `category_id` BIGINT,
-    `status` TINYINT DEFAULT 0,
-    `view_count` INT DEFAULT 0,
-    `like_count` INT DEFAULT 0,
-    `is_top` TINYINT DEFAULT 0,
-    `published_at` DATETIME,
-    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted` TINYINT DEFAULT 0,
-    UNIQUE KEY `uk_slug` (`slug`),
-    KEY `idx_category_id` (`category_id`),
-    KEY `idx_status` (`status`)
-);
-```
+- 迁移文件放在 `resources/db/migration/`
+- 命名格式：`V{version}__{description}.sql`
 
 ---
 
 ## API 文档
 
-### OpenAPI 注解
-
-```java
-@Tag(name = "Article", description = "文章管理接口")
-public class ArticleController {
-
-    @Operation(summary = "获取文章列表", description = "支持分页、筛选、排序")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "成功"),
-        @ApiResponse(responseCode = "400", description = "参数错误")
-    })
-    public Result<PageResult<ArticleVO>> list(
-        @Parameter(description = "页码") @RequestParam(defaultValue = "1") int page,
-        @Parameter(description = "每页数量") @RequestParam(defaultValue = "20") int size
-    ) {
-        // ...
-    }
-}
-```
+- 使用 SpringDoc 生成 OpenAPI 文档
+- Controller 使用 `@Tag` 注解
+- 方法使用 `@Operation`、`@ApiResponses` 注解
+- 参数使用 `@Parameter` 注解
 
 ---
 
 ## 测试规范
 
-### 单元测试
+### 测试命名
+- 测试类命名为 `{ClassName}Test`
+- 测试方法使用 `should{ExpectedBehavior}When{Condition}` 格式
 
-```java
-@ExtendWith(MockitoExtension.class)
-class ArticleCommandServiceTest {
-
-    @Mock
-    private ArticleRepository articleRepository;
-
-    @InjectMocks
-    private ArticleCommandService commandService;
-
-    @Test
-    void shouldCreateArticle() {
-        // given
-        CreateArticleCommand command = new CreateArticleCommand();
-        command.setTitle("Test Article");
-        command.setContent("Test Content");
-
-        // when
-        Long id = commandService.create(command);
-
-        // then
-        verify(articleRepository).save(any(Article.class));
-    }
-
-    @Test
-    void shouldThrowExceptionWhenArticleNotFound() {
-        // given
-        when(articleRepository.findById(anyLong())).thenReturn(null);
-
-        // when & then
-        assertThrows(BusinessException.class, () ->
-            commandService.delete(1L)
-        );
-    }
-}
-```
-
-### 集成测试
-
-```java
-@SpringBootTest
-@AutoConfigureMockMvc
-class ArticleControllerIntegrationTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Test
-    void shouldReturnArticleList() throws Exception {
-        mockMvc.perform(get("/api/v1/articles")
-                .param("page", "1")
-                .param("size", "10"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code").value(200))
-            .andExpect(jsonPath("$.data.list").isArray());
-    }
-}
-```
+### 测试类型
+- 单元测试：使用 JUnit 5 + Mockito
+- 集成测试：使用 `@SpringBootTest` + `@AutoConfigureMockMvc`
 
 ---
 
 ## 配置规范
 
-### application.yml
+### 环境变量文件
+- 开发环境：`application-dev.yml`
+- 生产环境：`application-prod.yml`
+- 敏感配置使用 `${ENV_VAR}` 语法注入，不提交到代码库
 
-```yaml
-spring:
-  application:
-    name: ai-site-api
-
-  profiles:
-    active: dev
-
-  datasource:
-    url: jdbc:mysql://localhost:3306/ai_site?useUnicode=true&characterEncoding=utf-8
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
-
-mybatis-plus:
-  mapper-locations: classpath*:/mapper/**/*.xml
-  configuration:
-    map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-server:
-  port: 8080
-```
-
-### 环境配置
-
-```yaml
-# application-dev.yml
-spring:
-  datasource:
-    url: jdbc:sqlite:./data/ai_site.db
-    driver-class-name: org.sqlite.JDBC
-
-logging:
-  level:
-    org.mydotey.ai.site: DEBUG
-
-# application-prod.yml
-spring:
-  datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:3306/ai_site
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-
-logging:
-  level:
-    org.mydotey.ai.site: INFO
-```
+### 关键配置
+- 数据源：URL、用户名、密码、驱动
+- Flyway：启用迁移，指定迁移文件位置
+- MyBatis Plus：Mapper 位置、驼峰转换、日志

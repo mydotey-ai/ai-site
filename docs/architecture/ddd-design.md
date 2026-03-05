@@ -27,8 +27,10 @@
 **职责**: 处理 HTTP 请求，参数校验，DTO 转换
 
 ```
-controller/     - HTTP 接口定义
-dto/            - 数据传输对象 (Request/Response/VO)
+interfaces/
+├── controller/     - HTTP 接口定义
+├── dto/            - 数据传输对象 (Request/Response/VO)
+└── assembler/      - DTO 转换器
 ```
 
 **代码示例**:
@@ -56,9 +58,10 @@ public class ArticleController {
 **职责**: 用例编排，事务管理，调用领域服务
 
 ```
-command/        - 写操作 (创建、更新、删除)
-query/          - 读操作 (查询、列表)
-job/            - 定时任务
+application/
+├── command/        - 写操作 (创建、更新、删除)
+├── query/          - 读操作 (查询、列表)
+└── job/            - 定时任务
 ```
 
 **Command Service 示例**:
@@ -97,10 +100,11 @@ public class ArticleQueryService {
 **职责**: 业务规则，领域对象，仓储接口
 
 ```
-entity/         - 领域实体
-repository/     - 仓储接口 (只有接口定义)
-enums/          - 领域枚举
-service/        - 领域服务 (可选，复杂业务逻辑)
+domain/
+├── entity/         - 领域实体
+├── repository/     - 仓储接口 (只有接口定义)
+├── enums/          - 领域枚举
+└── service/        - 领域服务 (可选，复杂业务逻辑)
 ```
 
 **Entity 示例**:
@@ -139,12 +143,13 @@ public interface ArticleRepository {
 **职责**: 技术实现，数据库访问，外部服务
 
 ```
-persistence/
-  ├── mapper/           - MyBatis Mapper
-  ├── repository/       - Repository 接口实现
-  └── converter/        - 对象转换器
-security/               - 安全相关实现
-storage/                - 存储服务实现
+infrastructure/
+├── persistence/
+│   ├── mapper/           - MyBatis Mapper
+│   ├── repository/       - Repository 接口实现
+│   └── converter/        - 对象转换器
+├── security/             - 安全相关实现
+└── storage/              - 存储服务实现
 ```
 
 **Repository 实现示例**:
@@ -175,65 +180,69 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 
 ```
 auth/
-├── controller/         - AuthController
-├── dto/                - LoginRequest, RegisterRequest
-├── command/            - LoginCommand, RegisterCommand
-├── query/              - UserInfoQuery
-├── entity/             - User, Role, Permission
-├── repository/         - UserRepository, RoleRepository
-└── enums/              - UserStatus
+├── interfaces/
+│   ├── controller/      - AuthController
+│   └── dto/             - LoginRequest, RegisterRequest
+├── application/
+│   ├── command/         - LoginCommand, RegisterCommand
+│   └── query/           - UserInfoQuery
+├── domain/
+│   ├── entity/          - User, Role, Permission
+│   ├── repository/      - UserRepository, RoleRepository
+│   └── enums/           - UserStatus
+└── infrastructure/
+    └── persistence/
 ```
 
 ### Blog 博客领域
 
 ```
 blog/
-├── controller/         - BlogController
-├── dto/                - ArticleVO, ArticleQuery
-├── command/            - CreateArticleCommand, UpdateArticleCommand
-├── query/              - ArticleListQuery
-├── entity/             - Article, Category, Tag
-├── repository/         - ArticleRepository, CategoryRepository
-└── enums/              - ArticleStatus
+├── interfaces/
+│   ├── controller/      - BlogController
+│   └── dto/             - ArticleVO, ArticleQuery
+├── application/
+│   ├── command/         - CreateArticleCommand, UpdateArticleCommand
+│   └── query/           - ArticleListQuery
+├── domain/
+│   ├── entity/          - Article, Category, Tag
+│   ├── repository/      - ArticleRepository, CategoryRepository
+│   └── enums/           - ArticleStatus
+└── infrastructure/
+    └── persistence/
 ```
 
 ### Portfolio 作品集领域
 
 ```
 portfolio/
-├── controller/
-├── dto/
-├── command/
-├── query/
-├── entity/             - Project, Skill, Experience
-├── repository/
-└── enums/
+├── interfaces/
+├── application/
+├── domain/
+│   └── entity/          - Project, Skill, Experience
+└── infrastructure/
 ```
 
 ### Creation 创作领域
 
 ```
 creation/
-├── controller/
-├── dto/
-├── command/
-├── query/
-├── entity/             - Novel, Chapter, Poetry, Essay
-├── repository/
-└── enums/
+├── interfaces/
+├── application/
+├── domain/
+│   └── entity/          - Novel, Chapter, Poetry, Essay
+└── infrastructure/
 ```
 
 ### Media 多媒体领域
 
 ```
 media/
-├── controller/
-├── dto/
-├── command/
-├── query/
-├── entity/             - Image, Video, Album
-├── repository/
-└── enums/
+├── interfaces/
+├── application/
+├── domain/
+│   └── entity/          - Image, Video, Album
+└── infrastructure/
 ```
 
 ## CQRS 模式
