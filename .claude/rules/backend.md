@@ -30,11 +30,18 @@ backend/
 ```
 org.mydotey.ai.site/
 ├── common/                    # 公共包
-│   └── domain/                # 公共领域组件
-│       ├── interfaces/        # 接入层基类/组件
-│       ├── application/       # 应用服务层基类/组件
-│       ├── domain/            # 领域层基类/组件
-│       └── infrastructure/    # 基础设施层基类/组件
+│   ├── advice/                # 全局异常处理
+│   ├── config/                # 配置类
+│   ├── exception/             # 异常类
+│   ├── security/              # 安全组件
+│   └── module/                # 公共模块组件 (DDD 四层)
+│       ├── interfaces/        # Result, PageResult
+│       ├── application/
+│       ├── domain/
+│       │   ├── entity/        # BaseEntity, PageQuery
+│       │   └── repository/
+│       └── infrastructure/
+│           └── persistence/
 └── {domain}/                  # 领域包
     ├── interfaces/            # 接入层
     │   ├── controller/        # HTTP 接口

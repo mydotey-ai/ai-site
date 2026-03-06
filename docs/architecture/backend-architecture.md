@@ -4,9 +4,8 @@
 
 ```
 backend/
-├── common/              # 公共模块
-├── api/                 # API 模块 (对外服务)
-├── admin/               # Admin 模块 (管理后台)
+├── common/              # 公共模块 (业务无关的工具类)
+├── service/             # 服务模块 (对外服务 + 管理后台)
 ├── pom.xml              # 父 POM
 └── mvnw                 # Maven Wrapper
 ```
@@ -14,12 +13,10 @@ backend/
 ## 模块依赖
 
 ```
-┌─────────────┐    ┌─────────────┐
-│    admin    │    │     api     │
-│  (管理服务)  │    │  (API服务)  │
-└──────┬──────┘    └──────┬──────┘
-       │                  │
-       └────────┬─────────┘
+         ┌─────────────┐
+         │   service   │
+         │  (服务模块)  │
+         └──────┬──────┘
                 │
                 ▼
          ┌─────────────┐
@@ -32,61 +29,43 @@ backend/
 
 ### Common 模块
 
-**职责**: 提供公共功能和基础设施支持
+**职责**: 提供业务无关的公共功能和工具支持
 
 ```
 common/
 └── src/main/java/org/mydotey/ai/site/common/
-    ├── config/          # 配置类
-    │   ├── MybatisPlusConfig.java
-    │   ├── WebMvcConfig.java
-    │   ├── SwaggerConfig.java
-    │   └── SecurityConfig.java
-    ├── exception/       # 异常处理
-    │   ├── GlobalExceptionHandler.java
-    │   ├── BusinessException.java
-    │   └── ErrorCode.java
-    ├── response/        # 统一响应
-    │   └── Result.java
-    ├── entity/          # 基础实体
-    │   ├── BaseEntity.java
-    │   └── PageQuery.java
-    ├── enums/           # 公共枚举
-    ├── util/            # 工具类
     ├── annotation/      # 自定义注解
-    └── constant/        # 常量
+    ├── constant/        # 常量定义
+    ├── enums/           # 通用枚举
+    └── util/            # 工具类
 ```
 
-### API 模块
+### Service 模块
 
-**职责**: 提供对外 API 服务，处理用户网站请求
+**职责**: 提供所有业务服务，包括对外 API 和管理后台
 
 ```
-api/
+service/
 └── src/main/java/org/mydotey/ai/site/
-    ├── ApiApplication.java
-    ├── auth/            # 认证领域
-    ├── blog/            # 博客领域
-    ├── portfolio/       # 作品集领域
-    ├── creation/        # 创作领域
-    ├── media/           # 多媒体领域
-    └── infrastructure/  # 基础设施层
-```
-
-### Admin 模块
-
-**职责**: 提供管理后台服务，处理管理操作
-
-```
-admin/
-└── src/main/java/org/mydotey/ai/site/
-    ├── AdminApplication.java
-    ├── auth/            # 认证领域 (管理端)
-    ├── blog/            # 博客领域 (管理端)
-    ├── portfolio/       # 作品集领域 (管理端)
-    ├── creation/        # 创作领域 (管理端)
-    ├── media/           # 多媒体领域 (管理端)
-    └── infrastructure/  # 基础设施层
+    ├── ServiceApplication.java
+    ├── common/                  # 公共代码 (业务相关)
+    │   ├── advice/              # 全局异常处理
+    │   ├── config/              # 配置类
+    │   ├── exception/           # 异常类
+    │   ├── security/            # 安全组件
+    │   └── module/              # 公共模块组件 (DDD 四层)
+    │       ├── interfaces/      # Result, PageResult
+    │       ├── application/
+    │       ├── domain/
+    │       │   ├── entity/      # BaseEntity, PageQuery
+    │       │   └── repository/
+    │       └── infrastructure/
+    │           └── persistence/
+    ├── auth/                    # 认证领域
+    ├── blog/                    # 博客领域
+    ├── portfolio/               # 作品集领域
+    ├── creation/                # 创作领域
+    └── media/                   # 多媒体领域
 ```
 
 ## DDD 分层架构
@@ -109,53 +88,59 @@ admin/
 
 ## 领域包结构
 
-每个领域采用相同的包结构：
+每个领域采用相同的 DDD 四层包结构：
 
 ```
 {domain}/
-├── controller/          # 接入层 - HTTP 接口
-│   └── XxxController.java
-├── dto/                 # 接入层 - 数据传输对象
-│   ├── XxxRequest.java
-│   ├── XxxResponse.java
-│   └── XxxVO.java
-├── command/             # 应用服务层 - 写操作
-│   ├── CreateXxxCommand.java
-│   ├── UpdateXxxCommand.java
-│   └── XxxCommandService.java
-├── query/               # 应用服务层 - 读操作
-│   ├── XxxListQuery.java
-│   └── XxxQueryService.java
-├── job/                 # 应用服务层 - 定时任务
-│   └── XxxCleanupJob.java
-├── entity/              # 领域层 - 实体
-│   └── Xxx.java
-├── repository/          # 领域层 - 仓储接口
-│   └── XxxRepository.java
-├── enums/               # 领域层 - 枚举
-│   └── XxxStatus.java
-└── service/             # 领域层 - 领域服务 (可选)
-    └── XxxDomainService.java
+├── interfaces/              # 接入层
+│   ├── controller/          # HTTP 接口
+│   ├── dto/                 # 数据传输对象
+│   └── assembler/           # DTO 转换器
+├── application/             # 应用服务层
+│   ├── command/             # 写操作
+│   ├── query/               # 读操作
+│   └── job/                 # 定时任务
+├── domain/                  # 领域层
+│   ├── entity/              # 领域实体
+│   ├── repository/          # 仓储接口
+│   ├── enums/               # 枚举
+│   └── service/             # 领域服务 (可选)
+└── infrastructure/          # 基础设施层
+    ├── persistence/
+    │   ├── mapper/          # MyBatis Mapper
+    │   ├── repository/      # Repository 实现
+    │   └── converter/       # 对象转换器
+    ├── security/
+    └── storage/
 ```
 
-## 基础设施层
+**分包原则**：领域简单时，各层直接放类文件，无需再分包；领域复杂时，再按功能分子包。
+
+## 公共包结构
 
 ```
-infrastructure/
-├── persistence/         # 持久化
-│   ├── mapper/          # MyBatis Mapper
-│   │   └── XxxMapper.java
-│   ├── repository/      # Repository 实现
-│   │   └── XxxRepositoryImpl.java
-│   └── converter/       # 对象转换器
-│       └── XxxConverter.java
-├── security/            # 安全
+common/
+├── advice/                  # GlobalExceptionHandler
+├── config/                  # 配置类
+│   ├── MybatisPlusConfig.java
+│   ├── SecurityConfig.java
+│   ├── WebMvcConfig.java
+│   └── SwaggerConfig.java
+├── exception/               # 异常类
+│   ├── BusinessException.java
+│   └── ErrorCode.java
+├── security/                # 安全组件
 │   ├── JwtTokenProvider.java
 │   ├── JwtAuthenticationFilter.java
 │   └── UserDetailsServiceImpl.java
-└── storage/             # 存储
-    ├── StorageService.java
-    └── LocalStorageService.java
+└── module/                  # 公共模块组件 (DDD 四层)
+    ├── interfaces/          # Result, PageResult
+    ├── application/
+    ├── domain/
+    │   ├── entity/          # BaseEntity, PageQuery
+    │   └── repository/
+    └── infrastructure/
+        └── persistence/
 ```
 
 ## 技术组件
@@ -166,7 +151,7 @@ infrastructure/
 # application.yml
 spring:
   application:
-    name: ai-site-api
+    name: ai-site-service
 
   datasource:
     url: jdbc:mysql://localhost:3306/ai_site
@@ -194,7 +179,7 @@ public class MybatisPlusConfig {
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         // 分页插件
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor());
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         return interceptor;
     }
 }
