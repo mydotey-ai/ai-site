@@ -47,7 +47,7 @@ common/
 ```
 service/
 └── src/main/java/org/mydotey/ai/site/
-    ├── ServiceApplication.java
+    ├── App.java
     ├── common/                  # 公共代码 (业务相关)
     │   ├── advice/              # 全局异常处理
     │   ├── config/              # 配置类
