@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { NLayout, NLayoutSider, NLayoutContent, NMenu, NIcon } from 'naive-ui'
-import { h, ref } from 'vue'
+import { h, ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   HomeOutline,
@@ -49,7 +49,10 @@ const menuOptions = [
   }
 ]
 
-const activeKey = ref(route.path)
+const activeKey = computed({
+  get: () => route.path,
+  set: () => {}
+})
 
 function handleMenuSelect(key: string) {
   router.push(key)
@@ -57,20 +60,22 @@ function handleMenuSelect(key: string) {
 </script>
 
 <template>
-  <NLayout has-sider style="height: 100vh">
+  <NLayout has-sider class="admin-layout">
     <NLayoutSider
       bordered
       collapse-mode="width"
       :collapsed-width="64"
-      :width="200"
+      :width="240"
       :collapsed="collapsed"
       show-trigger
       @collapse="collapsed = true"
       @expand="collapsed = false"
     >
-      <div class="logo">
-        <h2 v-if="!collapsed">AI-Site Admin</h2>
-        <span v-else>AI</span>
+      <div class="sidebar-logo" :class="{ 'sidebar-logo--collapsed': collapsed }">
+        <router-link to="/dashboard" class="sidebar-logo__link">
+          <span class="sidebar-logo__icon">AI</span>
+          <span v-if="!collapsed" class="sidebar-logo__text">AI-Site</span>
+        </router-link>
       </div>
       <NMenu
         :collapsed="collapsed"
@@ -81,23 +86,72 @@ function handleMenuSelect(key: string) {
         @update:value="handleMenuSelect"
       />
     </NLayoutSider>
-    <NLayoutContent>
+    <NLayoutContent class="admin-content">
       <slot />
     </NLayoutContent>
   </NLayout>
 </template>
 
 <style scoped lang="scss">
-.logo {
-  height: 60px;
+.admin-layout {
+  height: 100vh;
+}
+
+.sidebar-logo {
+  height: 64px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid var(--n-border-color);
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border-primary, #2d2d3a);
 
-  h2 {
-    margin: 0;
-    font-size: 16px;
+  &--collapsed {
+    padding: 0;
+    justify-content: center;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--text-primary, #f8fafc);
+    transition: all 0.2s;
+
+    &:hover {
+      text-shadow: var(--glow-primary, 0 0 20px rgba(59, 130, 246, 0.3));
+    }
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--color-primary, #3b82f6);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  &__text {
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+
+.admin-content {
+  padding: 24px;
+  background: var(--bg-primary, #0a0a0f);
+  min-height: calc(100vh - 64px);
+}
+
+// 移动端响应式
+@media (max-width: 1024px) {
+  .admin-content {
+    padding: 16px;
   }
 }
 </style>
