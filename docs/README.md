@@ -92,3 +92,4 @@ API 接口设计文档。
 |------|------|
 | [README.md](./plans/README.md) | 计划总览 |
 | [phases/](./plans/phases/) | 各阶段实施文档 |
+| [backend-refactoring.md](./plans/backend-refactoring.md) | 后端项目重构计划 |

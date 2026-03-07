@@ -161,13 +161,10 @@ pnpm dev
 ```bash
 cd backend
 
-# API 服务
-./mvnw spring-boot:run -pl api
+# 启动服务
+./mvnw spring-boot:run -pl service
 # 访问 http://localhost:8080
-
-# Admin 服务 (另一个终端)
-./mvnw spring-boot:run -pl admin
-# 访问 http://localhost:8081
+# API 文档 http://localhost:8080/swagger-ui.html
 ```
 
 ## IDE 配置
