@@ -24,7 +24,6 @@ AI-Site 是一个个人网站项目，包含作品展示、技术博客、创作
 - [Phase 1: 基础设施](./phases/phase-1-infrastructure.md) - ✅ 已完成 (2026-03-04)
 - [Phase 2: 认证模块](./phases/phase-2-auth-module.md) - ✅ 已完成 (2026-03-04)
 - [Phase 3: 博客模块](./phases/phase-3-blog-module.md)
-- [Phase 3: 博客模块](./phases/phase-3-blog-module.md)
 - [Phase 4: 作品集模块](./phases/phase-4-portfolio-module.md)
 - [Phase 5: 创作模块](./phases/phase-5-creation-module.md)
 - [Phase 6: 多媒体模块](./phases/phase-6-media-module.md)

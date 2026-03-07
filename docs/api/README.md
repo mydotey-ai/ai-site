@@ -11,11 +11,11 @@
 - [文章接口](./blog-api.md#文章)
 - [分类接口](./blog-api.md#分类)
 - [标签接口](./blog-api.md#标签)
+- [评论接口](./blog-api.md#评论)
 
 ### 作品集模块 (Portfolio)
 - [项目接口](./portfolio-api.md#项目)
-- [技能接口](./portfolio-api.md#技能)
-- [经历接口](./portfolio-api.md#经历)
+- [项目标签接口](./portfolio-api.md#项目标签)
 
 ### 创作模块 (Creation)
 - [小说接口](./creation-api.md#小说)
@@ -26,7 +26,9 @@
 ### 多媒体模块 (Media)
 - [图片接口](./media-api.md#图片)
 - [视频接口](./media-api.md#视频)
+- [音频接口](./media-api.md#音频)
 - [相册接口](./media-api.md#相册)
+- [文件夹接口](./media-api.md#文件夹)
 
 ## API 基础信息
 

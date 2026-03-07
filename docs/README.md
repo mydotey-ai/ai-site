@@ -7,6 +7,7 @@ docs/
 ├── architecture/       # 架构文档
 ├── api/                # API 文档
 ├── database/           # 数据库文档
+├── design/             # 设计文档
 ├── development/        # 开发文档
 ├── deployment/         # 部署文档
 ├── decisions/          # 架构决策记录
@@ -48,6 +49,17 @@ API 接口设计文档。
 |------|------|
 | [schema.md](./database/schema.md) | 数据库表结构设计 |
 | [mysql-sqlite-compat.md](./database/mysql-sqlite-compat.md) | MySQL/SQLite 兼容性说明 |
+
+---
+
+## 设计文档 (design/)
+
+前端设计系统和 UI 规范。
+
+| 文档 | 说明 |
+|------|------|
+| [site-design-system.md](./design/site-design-system.md) | Site 项目设计系统（面向用户） |
+| [admin-design-system.md](./design/admin-design-system.md) | Admin 项目设计系统（面向管理） |
 
 ---
 

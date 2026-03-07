@@ -79,7 +79,8 @@ Permission (权限)
 - 文章的发布、编辑、删除
 - 分类和标签管理
 - 文章搜索和筛选
-- 评论管理（可选）
+- 评论管理
+- SEO 优化
 
 ### 核心实体
 
@@ -89,14 +90,16 @@ Article (文章)
 ├── title: String
 ├── slug: String (URL友好)
 ├── summary: String
-├── content: String (Markdown)
-├── coverImage: String
+├── content: String (Markdown/RichText)
+├── contentType: ContentType (MARKDOWN/RICHTEXT)
 ├── categoryId: Long
 ├── tags: List<Tag>
-├── status: ArticleStatus
-├── viewCount: Integer
-├── likeCount: Integer
+├── status: ArticleStatus (DRAFT/PUBLISHED/HIDDEN)
 ├── isTop: Boolean
+├── viewCount: Integer
+├── seoTitle: String
+├── seoDescription: String
+├── seoKeywords: String
 ├── publishedAt: LocalDateTime
 └── createdAt, updatedAt
 
@@ -104,8 +107,10 @@ Category (分类)
 ├── id: Long
 ├── name: String
 ├── slug: String
+├── description: String
 ├── parentId: Long (支持层级)
 ├── sort: Integer
+├── articleCount: Integer
 └── createdAt, updatedAt
 
 Tag (标签)
@@ -113,6 +118,19 @@ Tag (标签)
 ├── name: String
 ├── slug: String
 ├── color: String
+├── articleCount: Integer
+└── createdAt, updatedAt
+
+Comment (评论)
+├── id: Long
+├── articleId: Long
+├── nickname: String
+├── email: String
+├── website: String
+├── content: String
+├── ip: String
+├── userAgent: String
+├── status: CommentStatus (PENDING/APPROVED/SPAM)
 └── createdAt, updatedAt
 ```
 
@@ -122,7 +140,15 @@ Tag (标签)
 |------|------|
 | DRAFT | 草稿 |
 | PUBLISHED | 已发布 |
-| ARCHIVED | 已归档 |
+| HIDDEN | 隐藏 |
+
+### 评论状态
+
+| 状态 | 说明 |
+|------|------|
+| PENDING | 待审核 |
+| APPROVED | 已批准 |
+| SPAM | 垃圾评论 |
 
 ---
 
@@ -130,9 +156,8 @@ Tag (标签)
 
 ### 职责
 - 项目作品展示
-- 技能展示
-- 工作经历
-- 教育背景
+- 项目标签分类
+- 多链接支持
 
 ### 核心实体
 
@@ -142,35 +167,49 @@ Project (项目)
 ├── name: String
 ├── slug: String
 ├── description: String
-├── content: String (详情)
+├── content: String (详情，Markdown)
 ├── coverImage: String
-├── images: List<String>
 ├── techStack: List<String>
-├── demoUrl: String
-├── sourceUrl: String
-├── status: ProjectStatus
+├── links: List<ProjectLink>
+├── tags: List<ProjectTag>
+├── status: ProjectStatus (DEVELOPING/RELEASED/ARCHIVED)
 ├── sort: Integer
 └── createdAt, updatedAt
 
-Skill (技能)
+ProjectLink (项目链接)
+├── id: Long
+├── projectId: Long
+├── type: LinkType (DEMO/SOURCE/DOCS/OTHER)
+├── label: String
+├── url: String
+├── sort: Integer
+└── createdAt, updatedAt
+
+ProjectTag (项目标签)
 ├── id: Long
 ├── name: String
-├── category: String
-├── level: SkillLevel
-├── icon: String
+├── slug: String
+├── color: String
 ├── sort: Integer
 └── createdAt, updatedAt
-
-Experience (工作经历)
-├── id: Long
-├── company: String
-├── position: String
-├── description: String
-├── startDate: LocalDate
-├── endDate: LocalDate (nullable)
-├── isCurrent: Boolean
-└── createdAt, updatedAt
 ```
+
+### 项目状态
+
+| 状态 | 说明 |
+|------|------|
+| DEVELOPING | 开发中 |
+| RELEASED | 已发布 |
+| ARCHIVED | 已归档 |
+
+### 链接类型
+
+| 类型 | 说明 |
+|------|------|
+| DEMO | 演示地址 |
+| SOURCE | 源码地址 |
+| DOCS | 文档地址 |
+| OTHER | 其他链接 |
 
 ---
 
@@ -178,7 +217,7 @@ Experience (工作经历)
 
 ### 职责
 - 小说连载管理
-- 诗歌、散文发布
+- 诗歌、散文、随笔发布
 - 章节内容管理
 - 阅读体验优化
 
@@ -188,15 +227,15 @@ Experience (工作经历)
 Novel (小说)
 ├── id: Long
 ├── title: String
+├── slug: String
 ├── author: String
 ├── summary: String
 ├── coverImage: String
-├── category: NovelCategory
-├── status: NovelStatus
+├── categoryId: Long
+├── status: NovelStatus (DRAFT/PUBLISHED/COMPLETED)
 ├── wordCount: Integer
 ├── chapterCount: Integer
 ├── viewCount: Integer
-├── isFinished: Boolean
 └── createdAt, updatedAt
 
 Chapter (章节)
@@ -206,30 +245,48 @@ Chapter (章节)
 ├── content: String
 ├── wordCount: Integer
 ├── chapterNo: Integer
-├── status: ChapterStatus
+├── status: ChapterStatus (DRAFT/PUBLISHED)
+├── viewCount: Integer
+└── createdAt, updatedAt
+
+NovelCategory (小说分类)
+├── id: Long
+├── name: String
+├── slug: String
+├── sort: Integer
 └── createdAt, updatedAt
 
 Poetry (诗歌)
 ├── id: Long
 ├── title: String
+├── slug: String
 ├── author: String
 ├── content: String
-├── category: PoetryCategory
-├── coverImage: String
-├── tags: List<String>
+├── category: String
+├── status: PublishStatus (DRAFT/PUBLISHED)
+├── viewCount: Integer
 └── createdAt, updatedAt
 
 Essay (散文)
 ├── id: Long
 ├── title: String
+├── slug: String
 ├── author: String
 ├── content: String
 ├── summary: String
-├── coverImage: String
-├── category: EssayCategory
-├── tags: List<String>
+├── category: String
+├── status: PublishStatus (DRAFT/PUBLISHED)
+├── viewCount: Integer
 └── createdAt, updatedAt
 ```
+
+### 小说状态
+
+| 状态 | 说明 |
+|------|------|
+| DRAFT | 草稿 |
+| PUBLISHED | 已发布（连载中） |
+| COMPLETED | 已完结 |
 
 ---
 
@@ -238,6 +295,7 @@ Essay (散文)
 ### 职责
 - 图片上传和管理
 - 视频展示
+- 音频管理
 - 相册管理
 - 文件存储
 
@@ -248,14 +306,19 @@ Image (图片)
 ├── id: Long
 ├── title: String
 ├── description: String
+├── originalName: String
+├── fileName: String
 ├── url: String
 ├── thumbnailUrl: String
 ├── width: Integer
 ├── height: Integer
 ├── size: Long
+├── mimeType: String
 ├── albumId: Long
+├── folderId: Long
 ├── tags: List<String>
 ├── isPublic: Boolean
+├── viewCount: Integer
 └── createdAt, updatedAt
 
 Video (视频)
@@ -263,25 +326,59 @@ Video (视频)
 ├── title: String
 ├── description: String
 ├── coverImage: String
+├── type: VideoType (LOCAL/EXTERNAL)
 ├── url: String
+├── fileName: String
 ├── duration: Integer (秒)
 ├── size: Long
-├── category: VideoCategory
+├── category: String
 ├── tags: List<String>
-├── viewCount: Integer
 ├── isPublic: Boolean
+├── viewCount: Integer
+└── createdAt, updatedAt
+
+Audio (音频)
+├── id: Long
+├── title: String
+├── description: String
+├── coverImage: String
+├── type: AudioType (LOCAL/EXTERNAL)
+├── url: String
+├── fileName: String
+├── duration: Integer (秒)
+├── size: Long
+├── category: String
+├── tags: List<String>
+├── isPublic: Boolean
+├── viewCount: Integer
 └── createdAt, updatedAt
 
 Album (相册)
 ├── id: Long
 ├── name: String
+├── slug: String
 ├── description: String
 ├── coverImage: String
 ├── imageCount: Integer
 ├── isPublic: Boolean
 ├── sort: Integer
 └── createdAt, updatedAt
+
+Folder (文件夹)
+├── id: Long
+├── name: String
+├── parentId: Long
+├── type: FolderType (IMAGE/VIDEO/AUDIO)
+├── sort: Integer
+└── createdAt, updatedAt
 ```
+
+### 视频类型
+
+| 类型 | 说明 |
+|------|------|
+| LOCAL | 本地上传 |
+| EXTERNAL | 外链视频 |
 
 ---
 

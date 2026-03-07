@@ -2,108 +2,681 @@
 
 ## 阶段目标
 
-实现作品集功能，包括：
-- 项目展示
-- 技能展示
-- 工作经历
+实现项目作品展示功能，包括：
+- 项目管理（CRUD、多状态）
+- 项目标签分类
+- 多链接支持
 - 前端作品集页面
 
-## 任务清单
+---
 
-### 1. 后端 - Portfolio 领域
+## 1. 需求分析
+
+### 1.1 目标用户
+
+| 用户类型 | 需求 |
+|---------|------|
+| 网站主人 | 展示项目作品、管理项目信息 |
+| 访客 | 浏览项目、了解技术栈、访问项目链接 |
+| HR/面试官 | 评估技术能力、查看项目经验 |
+
+### 1.2 核心功能
+
+| 功能 | 优先级 | 说明 |
+|------|--------|------|
+| 项目 CRUD | P0 | 创建、编辑、删除项目 |
+| 项目状态 | P0 | 开发中/已发布/已归档 |
+| 项目标签 | P1 | 通过标签区分项目类型 |
+| 多链接支持 | P1 | 演示链接、源码链接等 |
+| 封面图 | P1 | 项目封面展示 |
+| 时间排序 | P1 | 按创建/更新时间排序 |
+
+### 1.3 不需要的功能
+
+- 技能展示
+- 工作经历
+- 教育背景
+- 访问统计
+
+### 1.4 用户场景
+
+#### 场景 1：添加新项目
+
+```
+用户：网站主人
+目标：添加一个新项目到作品集
+
+流程：
+1. 登录管理后台
+2. 进入作品集管理，点击"新建项目"
+3. 填写项目名称、描述
+4. 添加技术栈（如 Vue、Spring Boot）
+5. 添加项目链接（演示地址、源码地址）
+6. 上传封面图
+7. 选择项目标签（Web/Mobile/CLI 等）
+8. 设置状态（开发中/已发布）
+9. 保存发布
+```
+
+#### 场景 2：浏览作品集
+
+```
+用户：访客
+目标：浏览项目作品
+
+流程：
+1. 访问作品集页面
+2. 浏览项目列表（卡片布局）
+3. 可按标签筛选项目
+4. 点击项目查看详情
+5. 点击链接访问项目演示或源码
+```
+
+#### 场景 3：筛选项目
+
+```
+用户：访客
+目标：查看特定类型的项目
+
+流程：
+1. 在作品集页面点击标签筛选
+2. 系统显示该标签下的项目
+3. 浏览筛选后的项目列表
+```
+
+---
+
+## 2. 数据建模
+
+### 2.1 实体关系图
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Project   │────▶│ ProjectTag  │◀────│     Tag     │
+└─────────────┘     └─────────────┘     └─────────────┘
+       │
+       │            ┌─────────────┐
+       └───────────▶│ ProjectLink │
+                    └─────────────┘
+```
+
+### 2.2 项目表 (project)
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | BIGINT | 主键 |
+| name | VARCHAR(100) | 项目名称 |
+| slug | VARCHAR(100) | URL 别名（唯一） |
+| description | VARCHAR(500) | 项目描述 |
+| content | TEXT | 项目详情（可选，Markdown） |
+| cover_image | VARCHAR(255) | 封面图 URL |
+| tech_stack | JSON | 技术栈列表 |
+| status | VARCHAR(20) | 状态: DEVELOPING / RELEASED / ARCHIVED |
+| created_at | DATETIME | 创建时间 |
+| updated_at | DATETIME | 更新时间 |
+
+**技术栈 JSON 格式：**
+```json
+["Vue.js", "Spring Boot", "MySQL", "Redis"]
+```
+
+**索引设计：**
+- `uk_slug` - slug 唯一索引
+- `idx_status` - 状态索引
+- `idx_created_at` - 创建时间索引
+
+### 2.3 项目链接表 (project_link)
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | BIGINT | 主键 |
+| project_id | BIGINT | 项目 ID |
+| type | VARCHAR(20) | 链接类型: DEMO / SOURCE / DOCS / OTHER |
+| label | VARCHAR(50) | 链接标签（显示名称） |
+| url | VARCHAR(500) | 链接地址 |
+| sort | INT | 排序 |
+
+**链接类型说明：**
+- `DEMO` - 演示地址
+- `SOURCE` - 源码地址（如 GitHub）
+- `DOCS` - 文档地址
+- `OTHER` - 其他链接
+
+### 2.4 标签表 (project_tag)
+
+> 复用现有 tag 表或新建独立表
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | BIGINT | 主键 |
+| name | VARCHAR(50) | 标签名称 |
+| slug | VARCHAR(50) | URL 别名 |
+| color | VARCHAR(20) | 标签颜色（HEX） |
+| sort | INT | 排序 |
+
+### 2.5 项目标签关联表 (project_tag_relation)
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| project_id | BIGINT | 项目 ID |
+| tag_id | BIGINT | 标签 ID |
+
+**联合主键：** `(project_id, tag_id)`
+
+---
+
+## 3. API 设计
+
+### 3.1 接口概览
+
+| 模块 | 接口 | 方法 | 说明 |
+|------|------|------|------|
+| **项目** | /api/v1/projects | GET | 项目列表（公开） |
+| | /api/v1/projects/{id} | GET | 项目详情 |
+| | /api/v1/projects/slug/{slug} | GET | 按 slug 获取项目 |
+| | /admin/v1/projects | POST | 创建项目 |
+| | /admin/v1/projects/{id} | PUT | 更新项目 |
+| | /admin/v1/projects/{id} | DELETE | 删除项目 |
+| **标签** | /api/v1/project-tags | GET | 项目标签列表 |
+| | /admin/v1/project-tags | POST | 创建标签 |
+| | /admin/v1/project-tags/{id} | PUT | 更新标签 |
+| | /admin/v1/project-tags/{id} | DELETE | 删除标签 |
+
+### 3.2 项目接口详细设计
+
+#### 获取项目列表
+
+```
+GET /api/v1/projects?page=1&size=12&tagId=1&status=RELEASED
+
+Query Parameters:
+- page: 页码（默认 1）
+- size: 每页数量（默认 12，最大 50）
+- tagId: 标签 ID（可选）
+- status: 状态（可选，公开接口仅支持 RELEASED）
+
+Response:
+{
+  "code": 200,
+  "data": {
+    "list": [
+      {
+        "id": 1,
+        "name": "AI-Site",
+        "slug": "ai-site",
+        "description": "个人网站项目，包含博客、作品集、创作等功能",
+        "coverImage": "/uploads/projects/ai-site.png",
+        "techStack": ["Vue.js", "Spring Boot", "MySQL"],
+        "tags": [
+          { "id": 1, "name": "Web", "slug": "web", "color": "#42b883" }
+        ],
+        "links": [
+          { "type": "DEMO", "label": "在线演示", "url": "https://example.com" },
+          { "type": "SOURCE", "label": "源码", "url": "https://github.com/..." }
+        ],
+        "status": "RELEASED",
+        "createdAt": "2026-03-07T10:00:00"
+      }
+    ],
+    "total": 20,
+    "page": 1,
+    "size": 12
+  }
+}
+```
+
+#### 获取项目详情
+
+```
+GET /api/v1/projects/{id}
+或
+GET /api/v1/projects/slug/{slug}
+
+Response:
+{
+  "code": 200,
+  "data": {
+    "id": 1,
+    "name": "AI-Site",
+    "slug": "ai-site",
+    "description": "个人网站项目",
+    "content": "## 项目背景\n\n这是一个...",
+    "coverImage": "/uploads/projects/ai-site.png",
+    "techStack": ["Vue.js", "Spring Boot", "MySQL", "Redis"],
+    "tags": [
+      { "id": 1, "name": "Web", "slug": "web", "color": "#42b883" }
+    ],
+    "links": [
+      { "type": "DEMO", "label": "在线演示", "url": "https://example.com" },
+      { "type": "SOURCE", "label": "GitHub", "url": "https://github.com/..." }
+    ],
+    "status": "RELEASED",
+    "createdAt": "2026-03-07T10:00:00",
+    "updatedAt": "2026-03-07T12:00:00"
+  }
+}
+```
+
+#### 创建项目
+
+```
+POST /admin/v1/projects
+
+Request:
+{
+  "name": "AI-Site",
+  "slug": "ai-site",                    // 可选，自动生成
+  "description": "个人网站项目",
+  "content": "## 项目背景\n\n...",      // 可选
+  "coverImage": "/uploads/projects/ai-site.png",
+  "techStack": ["Vue.js", "Spring Boot"],
+  "tagIds": [1, 2],
+  "links": [
+    { "type": "DEMO", "label": "在线演示", "url": "https://example.com" },
+    { "type": "SOURCE", "label": "GitHub", "url": "https://github.com/..." }
+  ],
+  "status": "DEVELOPING"                // DEVELOPING / RELEASED / ARCHIVED
+}
+
+Response:
+{
+  "code": 200,
+  "data": {
+    "id": 1,
+    "name": "AI-Site",
+    "slug": "ai-site"
+  }
+}
+```
+
+### 3.3 标签接口详细设计
+
+#### 获取项目标签列表
+
+```
+GET /api/v1/project-tags
+
+Response:
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 1,
+      "name": "Web",
+      "slug": "web",
+      "color": "#42b883",
+      "projectCount": 10
+    },
+    {
+      "id": 2,
+      "name": "Mobile",
+      "slug": "mobile",
+      "color": "#38bdf8",
+      "projectCount": 5
+    }
+  ]
+}
+```
+
+---
+
+## 4. 前端设计
+
+### 4.1 页面结构
+
+#### Site（用户端）
+
+```
+/portfolio                 作品集首页（项目列表）
+/portfolio/{slug}          项目详情
+```
+
+#### Admin（管理端）
+
+```
+/admin/portfolio/projects     项目管理
+/admin/portfolio/projects/new  新建项目
+/admin/portfolio/projects/{id}/edit  编辑项目
+/admin/portfolio/tags         标签管理
+```
+
+### 4.2 组件设计
+
+#### 通用组件
+
+| 组件 | 说明 |
+|------|------|
+| `ProjectCard.vue` | 项目卡片（卡片布局） |
+| `ProjectList.vue` | 项目列表容器 |
+| `ProjectFilter.vue` | 标签筛选组件 |
+| `TechStackBadge.vue` | 技术栈标签 |
+| `ProjectLinks.vue` | 项目链接列表 |
+
+#### 页面组件
+
+**Site 端：**
+
+| 组件 | 说明 |
+|------|------|
+| `PortfolioList.vue` | 作品集首页 - 项目列表 |
+| `PortfolioDetail.vue` | 项目详情页 |
+
+**Admin 端：**
+
+| 组件 | 说明 |
+|------|------|
+| `ProjectList.vue` | 项目管理列表 |
+| `ProjectEdit.vue` | 项目编辑页 |
+| `ProjectForm.vue` | 项目表单组件 |
+| `ProjectLinkEditor.vue` | 链接编辑器组件 |
+| `ProjectTagManage.vue` | 标签管理 |
+
+### 4.3 页面布局设计
+
+#### 作品集首页
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Header: Logo | 首页 | 博客 | 作品集 | 创作 | 关于     │
+├─────────────────────────────────────────────────────────┤
+│  Hero: 作品集标题 + 简介                                │
+├─────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────┐    │
+│  │  标签筛选: [全部] [Web] [Mobile] [CLI] [其他]    │    │
+│  └─────────────────────────────────────────────────┘    │
+│  ┌───────────┐  ┌───────────┐  ┌───────────┐           │
+│  │ ┌───────┐ │  │ ┌───────┐ │  │ ┌───────┐ │           │
+│  │ │ 封面图 │ │  │ │ 封面图 │ │  │ │ 封面图 │ │           │
+│  │ └───────┘ │  │ └───────┘ │  │ └───────┘ │           │
+│  │ 项目名称   │  │ 项目名称   │  │ 项目名称   │           │
+│  │ 项目描述   │  │ 项目描述   │  │ 项目描述   │           │
+│  │ Vue | Java│  │ React | Go│  │ Python    │           │
+│  │ [演示][源码]│  │ [演示]    │  │ [源码]    │           │
+│  └───────────┘  └───────────┘  └───────────┘           │
+│  ┌───────────┐  ┌───────────┐  ┌───────────┐           │
+│  │   ...     │  │   ...     │  │   ...     │           │
+│  └───────────┘  └───────────┘  └───────────┘           │
+├─────────────────────────────────────────────────────────┤
+│  Footer: 版权信息                                       │
+└─────────────────────────────────────────────────────────┘
+```
+
+#### 项目详情页
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Header                                                  │
+├─────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────┐    │
+│  │  ┌─────────────┐  项目名称                       │    │
+│  │  │             │  Web | 已发布                    │    │
+│  │  │   封面图     │  创建于 2026-03-07             │    │
+│  │  │             │                                  │    │
+│  │  └─────────────┘  项目描述...                     │    │
+│  └─────────────────────────────────────────────────┘    │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │  链接: [在线演示] [GitHub源码]                   │    │
+│  └─────────────────────────────────────────────────┘    │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │  技术栈: Vue.js | Spring Boot | MySQL | Redis   │    │
+│  └─────────────────────────────────────────────────┘    │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │  项目详情 (Markdown 渲染)                        │    │
+│  │  ## 项目背景                                     │    │
+│  │  ...                                            │    │
+│  └─────────────────────────────────────────────────┘    │
+├─────────────────────────────────────────────────────────┤
+│  Footer                                                  │
+└─────────────────────────────────────────────────────────┘
+```
+
+#### 管理后台 - 项目编辑页
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Sidebar | 作品集管理 > 新建项目                        │
+├─────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────┐    │
+│  │  项目名称: [________________________]            │    │
+│  │  Slug: [________________________] (自动生成)    │    │
+│  │  描述: [________________________]               │    │
+│  └─────────────────────────────────────────────────┘    │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │  封面图: [上传图片] 或 [输入URL]                 │    │
+│  │  ┌─────────────────────────────────────────┐    │    │
+│  │  │           预览区域                        │    │    │
+│  │  └─────────────────────────────────────────┘    │    │
+│  └─────────────────────────────────────────────────┘    │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │  技术栈: [Vue] [Spring Boot] [+]               │    │
+│  └─────────────────────────────────────────────────┘    │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │  项目链接                                        │    │
+│  │  ┌────────────────────────────────────────┐     │    │
+│  │  │ 类型: [演示 ▼] 标签: [在线演示]         │     │    │
+│  │  │ 链接: [https://...]                     │     │    │
+│  │  └────────────────────────────────────────┘     │    │
+│  │  ┌────────────────────────────────────────┐     │    │
+│  │  │ 类型: [源码 ▼] 标签: [GitHub]           │     │    │
+│  │  │ 链接: [https://github.com/...]          │     │    │
+│  │  └────────────────────────────────────────┘     │    │
+│  │  [+ 添加链接]                                   │    │
+│  └─────────────────────────────────────────────────┘    │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │  标签: [Web] [Frontend] [+]                     │    │
+│  │  状态: [已发布 ▼]                               │    │
+│  └─────────────────────────────────────────────────┘    │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │  详细内容 (Markdown 编辑器，可选)                │    │
+│  │  [编辑器区域]                                   │    │
+│  └─────────────────────────────────────────────────┘    │
+│  [保存] [发布]                                           │
+└─────────────────────────────────────────────────────────┘
+```
+
+### 4.4 设计规范
+
+#### 项目卡片样式
+
+```scss
+.project-card {
+  border-radius: 12px;
+  background: var(--card-bg);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  &__cover {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  &__content {
+    padding: 16px;
+  }
+
+  &__name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  &__description {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  &__tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  &__links {
+    display: flex;
+    gap: 12px;
+  }
+}
+```
+
+#### 技术栈标签样式
+
+```scss
+.tech-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+```
+
+---
+
+## 5. 技术实现要点
+
+### 5.1 项目链接管理
+
+项目链接支持多个，使用单独的 `project_link` 表存储：
+
+```java
+// 创建/更新项目时同步处理链接
+@Transactional
+public void saveProject(ProjectRequest request) {
+    // 1. 保存项目基本信息
+    Project project = saveProjectBasic(request);
+
+    // 2. 删除旧的链接
+    projectLinkMapper.deleteByProjectId(project.getId());
+
+    // 3. 保存新的链接
+    if (request.getLinks() != null) {
+        request.getLinks().forEach(link -> {
+            link.setProjectId(project.getId());
+            projectLinkMapper.insert(link);
+        });
+    }
+}
+```
+
+### 5.2 技术栈存储
+
+技术栈使用 JSON 数组存储，便于前端直接使用：
+
+```java
+// Entity
+@TableField(typeHandler = JacksonTypeHandler.class)
+private List<String> techStack;
+
+// MyBatis Plus 配置
+@TableName(autoResultMap = true)
+public class Project {
+    // ...
+}
+```
+
+### 5.3 标签筛选
+
+```sql
+-- 按标签筛选项目
+SELECT DISTINCT p.*
+FROM project p
+JOIN project_tag_relation ptr ON p.id = ptr.project_id
+WHERE ptr.tag_id = #{tagId}
+AND p.status = 'RELEASED'
+ORDER BY p.created_at DESC;
+```
+
+---
+
+## 6. 任务清单
+
+### 6.1 后端开发
 
 #### 接入层
-- [ ] PortfolioController
-- [ ] ProjectRequest, ProjectResponse
-- [ ] SkillRequest, SkillResponse
-- [ ] ExperienceRequest, ExperienceResponse
+- [ ] ProjectController（公开接口）
+- [ ] ProjectAdminController（管理接口）
+- [ ] ProjectTagController
+- [ ] ProjectRequest / ProjectResponse
+- [ ] ProjectLinkRequest / ProjectLinkResponse
+- [ ] ProjectTagRequest / ProjectTagResponse
 
 #### 应用服务层
-- [ ] PortfolioCommandService
-- [ ] PortfolioQueryService
+- [ ] ProjectCommandService
+- [ ] ProjectQueryService
+- [ ] ProjectTagService
 
 #### 领域层
 - [ ] Project Entity
-- [ ] Skill Entity
-- [ ] Experience Entity
+- [ ] ProjectLink Entity
+- [ ] ProjectTag Entity
 - [ ] ProjectRepository
-- [ ] SkillRepository
+- [ ] ProjectLinkRepository
+- [ ] ProjectTagRepository
 
 #### 基础设施层
 - [ ] ProjectMapper
-- [ ] SkillMapper
-- [ ] ExperienceMapper
+- [ ] ProjectLinkMapper
+- [ ] ProjectTagMapper
+- [ ] ProjectTagRelationMapper
 
-### 2. 数据库
-
+### 6.2 数据库
 - [ ] project 表
-- [ ] skill 表
-- [ ] experience 表
+- [ ] project_link 表
+- [ ] project_tag 表（或复用 tag 表）
+- [ ] project_tag_relation 表
 
-### 3. 前端 - 作品集页面
+### 6.3 前端开发
 
-#### Admin
-- [ ] ProjectList.vue
-- [ ] ProjectEdit.vue
-- [ ] SkillManage.vue
-- [ ] ExperienceManage.vue
+#### Site 端
+- [ ] PortfolioList.vue（作品集首页）
+- [ ] PortfolioDetail.vue（项目详情）
+- [ ] ProjectCard.vue（项目卡片）
+- [ ] ProjectFilter.vue（标签筛选）
+- [ ] TechStackBadge.vue（技术栈标签）
+- [ ] ProjectLinks.vue（项目链接）
 
-#### Site
-- [ ] PortfolioList.vue
-- [ ] PortfolioDetail.vue
-- [ ] ProjectCard.vue
-- [ ] SkillSection.vue
+#### Admin 端
+- [ ] ProjectList.vue（项目管理列表）
+- [ ] ProjectEdit.vue（项目编辑）
+- [ ] ProjectForm.vue（项目表单）
+- [ ] ProjectLinkEditor.vue（链接编辑器）
+- [ ] ProjectTagManage.vue（标签管理）
 
-## API 设计
+---
 
-### 项目列表
+## 7. 验收标准
 
-```
-GET /api/v1/projects
-Response:
-{
-  "code": 200,
-  "data": {
-    "list": [
-      {
-        "id": 1,
-        "name": "项目名称",
-        "description": "项目描述",
-        "techStack": ["Vue", "Spring Boot"],
-        "demoUrl": "https://...",
-        "coverImage": "..."
-      }
-    ]
-  }
-}
-```
+### 功能验收
+- [ ] 项目可以创建、编辑、删除
+- [ ] 项目状态流转正常（开发中/已发布/已归档）
+- [ ] 项目可以添加多个链接
+- [ ] 项目可以设置封面图
+- [ ] 项目可以设置标签
+- [ ] 项目可以按标签筛选
+- [ ] 技术栈正确显示
+- [ ] 前端作品集页面正常展示
 
-### 技能列表
+### 性能验收
+- [ ] 项目列表加载 < 500ms
+- [ ] 项目详情加载 < 300ms
 
-```
-GET /api/v1/skills
-Response:
-{
-  "code": 200,
-  "data": {
-    "list": [
-      {
-        "id": 1,
-        "name": "Vue.js",
-        "category": "前端",
-        "level": 5
-      }
-    ]
-  }
-}
-```
+### 兼容性验收
+- [ ] MySQL 环境功能正常
+- [ ] SQLite 环境功能正常
 
-## 验收标准
-
-- [ ] 项目可以管理
-- [ ] 技能可以管理
-- [ ] 工作经历可以管理
-- [ ] 前端作品集页面可正常访问
+---
 
 ## 下一阶段
 
