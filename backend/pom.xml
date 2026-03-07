@@ -18,9 +18,9 @@
     </modules>
 
     <properties>
-        <java.version>21</java.version>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <java.version>25</java.version>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -43,7 +43,7 @@
         <springdoc.version>2.3.0</springdoc.version>
 
         <!-- Tools -->
-        <lombok.version>1.18.36</lombok.version>
+        <lombok.version>1.18.38</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <hutool.version>5.8.25</hutool.version>
     </properties>
