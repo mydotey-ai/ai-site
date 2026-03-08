@@ -67,33 +67,55 @@ ai-site/
 
 - JDK 25+
 - Node.js 20+
-- pnpm 9+
-- MySQL 8.0+ (可选)
+- npm 或 pnpm
+- MySQL 8.0+ (可选，开发环境使用 SQLite)
 
-### 前端
+### 一键启动
+
+```bash
+# 启动所有服务
+./scripts/dev.sh start
+
+# 查看服务状态
+./scripts/dev.sh status
+
+# 查看日志
+./scripts/dev.sh log [backend|admin|site|all]
+
+# 停止服务
+./scripts/dev.sh stop
+
+# 重启服务
+./scripts/dev.sh restart
+```
+
+服务地址：
+- 后端 API: http://localhost:8080
+- Admin: http://localhost:3000
+- Site: http://localhost:3001
+
+默认登录凭据：`admin` / `admin123`
+
+### 单独启动
+
+#### 前端
 
 ```bash
 # 安装依赖
-cd frontend && pnpm install
+cd frontend/admin && npm install
 
 # 启动管理后台
-cd admin && pnpm dev
+cd frontend/admin && npm run dev
 
 # 启动用户网站
-cd site && pnpm dev
+cd frontend/site && npm run dev
 ```
 
-### 后端
+#### 后端
 
 ```bash
-# 编译项目
-cd backend && ./mvnw clean compile
-
-# 启动 API 服务
-./mvnw spring-boot:run -pl api
-
-# 启动 Admin 服务
-./mvnw spring-boot:run -pl admin
+# 编译并启动
+cd backend/service && mvn spring-boot:run
 ```
 
 ## 文档
