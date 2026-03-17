@@ -27,8 +27,11 @@ backend/
 ```
 
 ### DDD 分层结构
+
+以下是 `backend/service` 模块的 Java 包结构：
+
 ```
-org.mydotey.ai.site/
+org.mydotey.ai.site/           # service 模块基础包
 ├── common/                    # 公共包
 │   ├── advice/                # 全局异常处理
 │   ├── config/                # 配置类
