@@ -10,20 +10,22 @@
 |------|------|------|
 | Vue | 3.5+ | 核心框架 |
 | Vite | 6.x | 构建工具 |
-| TypeScript | 5.x | 类型系统 |
-| Pinia | 最新 | 状态管理 |
-| Vue Router | 4.x | 路由管理 |
-| Naive UI | 最新 | UI 组件库 |
+| TypeScript | 5.6+ | 类型系统 |
+| Pinia | 2.2+ | 状态管理 |
+| Vue Router | 4.4+ | 路由管理 |
+| Naive UI | 2.40+ | UI 组件库 |
+| Vitest | 2.0+ | 测试框架 |
 
 ### 后端
 
 | 技术 | 版本 | 说明 |
 |------|------|------|
 | JDK | 25 | 运行环境 |
-| Spring Boot | 3.5.x | 核心框架 |
-| MyBatis Plus | 最新 | ORM 框架 |
+| Spring Boot | 3.5.0 | 核心框架 |
+| MyBatis Plus | 3.5.9 | ORM 框架 |
 | Spring Security | 6.x | 安全框架 |
-| Flyway | 最新 | 数据库迁移 |
+| Flyway | 10.10 | 数据库迁移 |
+| SpringDoc | 2.3.0 | API 文档 |
 
 ### 数据库
 
@@ -47,8 +49,10 @@ ai-site/
 │   ├── architecture/  # 架构文档
 │   ├── api/           # API 文档
 │   ├── database/      # 数据库文档
+│   ├── design/        # 设计文档
 │   ├── development/   # 开发文档
 │   ├── deployment/    # 部署文档
+│   ├── decisions/     # 架构决策记录
 │   └── plans/         # 开发计划
 ├── frontend/          # 前端项目
 │   ├── admin/         # 管理后台
@@ -56,8 +60,7 @@ ai-site/
 │   └── shared/        # 共享代码
 ├── backend/           # 后端项目
 │   ├── common/        # 公共模块
-│   ├── api/           # API 模块
-│   └── admin/         # Admin 模块
+│   └── service/       # 服务模块 (DDD 分层)
 └── scripts/           # 脚本工具
 ```
 
@@ -124,6 +127,11 @@ cd backend/service && mvn spring-boot:run
 
 - [架构文档](./docs/architecture/)
 - [API 文档](./docs/api/)
+- [数据库文档](./docs/database/)
+- [设计文档](./docs/design/)
+- [开发文档](./docs/development/)
+- [部署文档](./docs/deployment/)
+- [架构决策记录](./docs/decisions/)
 - [开发计划](./docs/plans/)
 
 ## 开发规范
