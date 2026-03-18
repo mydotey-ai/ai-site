@@ -18,6 +18,7 @@ public enum ErrorCode {
     FORBIDDEN(40300, "禁止访问"),
     NOT_FOUND(40400, "资源不存在"),
     METHOD_NOT_ALLOWED(40500, "请求方法不允许"),
+    ALREADY_EXISTS(40900, "资源已存在"),
     INTERNAL_ERROR(50000, "服务器内部错误"),
 
     // 认证相关 401xx
