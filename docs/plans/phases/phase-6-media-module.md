@@ -107,7 +107,7 @@
 | title | VARCHAR(100) | 标题 |
 | description | VARCHAR(500) | 描述 |
 | original_name | VARCHAR(255) | 原始文件名 |
-| file_name | VARCHAR(255) | 存储文件名 |
+| file_name | VARCHAR(255) | 存储文件名（UUID） |
 | url | VARCHAR(500) | 图片 URL |
 | thumbnail_url | VARCHAR(500) | 缩略图 URL |
 | width | INT | 宽度 |
@@ -116,16 +116,22 @@
 | mime_type | VARCHAR(50) | MIME 类型 |
 | album_id | BIGINT | 相册 ID |
 | folder_id | BIGINT | 文件夹 ID |
-| tags | VARCHAR(255) | 标签（逗号分隔） |
+| tags | JSON | 标签列表 `["标签1", "标签2"]` |
 | is_public | TINYINT(1) | 是否公开: 0-否, 1-是 |
 | view_count | INT | 浏览量 |
 | created_at | DATETIME | 创建时间 |
+| deleted_at | DATETIME | 删除时间（软删除） |
 
 **索引设计：**
 - `idx_album_id` - 相册索引
 - `idx_folder_id` - 文件夹索引
 - `idx_is_public` - 公开状态索引
 - `idx_created_at` - 创建时间索引
+- `idx_deleted_at` - 软删除索引
+
+**文件命名策略：**
+- 使用 UUID + 时间戳生成唯一文件名，避免冲突和安全风险
+- 格式：`{year}/{month}/{uuid}.{ext}`
 
 ### 2.3 视频表 (video)
 
@@ -136,20 +142,27 @@
 | description | VARCHAR(500) | 描述 |
 | cover_image | VARCHAR(255) | 封面图 URL |
 | type | VARCHAR(20) | 类型: LOCAL / EXTERNAL |
-| url | VARCHAR(500) | 视频 URL 或嵌入代码 |
-| file_name | VARCHAR(255) | 存储文件名（本地上传） |
+| platform | VARCHAR(20) | 平台: BILIBILI / YOUTUBE / LOCAL |
+| video_id | VARCHAR(100) | 外链视频 ID（B站 BV号等） |
+| url | VARCHAR(500) | 视频 URL（本地上传） |
+| file_name | VARCHAR(255) | 存储文件名（本地上传，UUID） |
 | duration | INT | 时长（秒） |
 | size | BIGINT | 文件大小（字节） |
 | category | VARCHAR(50) | 分类 |
-| tags | VARCHAR(255) | 标签 |
+| tags | JSON | 标签列表 |
 | is_public | TINYINT(1) | 是否公开 |
 | view_count | INT | 浏览量 |
 | created_at | DATETIME | 创建时间 |
 | updated_at | DATETIME | 更新时间 |
+| deleted_at | DATETIME | 删除时间（软删除） |
 
 **视频类型说明：**
 - `LOCAL` - 本地上传
 - `EXTERNAL` - 外链视频（B站、YouTube 等）
+
+**安全说明：**
+- 外链视频只存储平台和视频 ID，前端根据平台生成嵌入代码
+- 避免直接存储嵌入代码，防止 XSS 攻击
 
 ### 2.4 音频表 (audio)
 
@@ -160,15 +173,21 @@
 | description | VARCHAR(500) | 描述 |
 | cover_image | VARCHAR(255) | 封面图 URL |
 | type | VARCHAR(20) | 类型: LOCAL / EXTERNAL |
-| url | VARCHAR(500) | 音频 URL 或嵌入代码 |
-| file_name | VARCHAR(255) | 存储文件名 |
+| platform | VARCHAR(20) | 平台: NETEASE / LOCAL |
+| audio_id | VARCHAR(100) | 外链音频 ID |
+| url | VARCHAR(500) | 音频 URL（本地上传） |
+| file_name | VARCHAR(255) | 存储文件名（UUID） |
 | duration | INT | 时长（秒） |
 | size | BIGINT | 文件大小（字节） |
 | category | VARCHAR(50) | 分类 |
-| tags | VARCHAR(255) | 标签 |
+| tags | JSON | 标签列表 |
 | is_public | TINYINT(1) | 是否公开 |
 | view_count | INT | 播放量 |
 | created_at | DATETIME | 创建时间 |
+| deleted_at | DATETIME | 删除时间（软删除） |
+
+**安全说明：**
+- 外链音频只存储平台和音频 ID，前端生成播放代码
 
 ### 2.5 相册表 (album)
 
@@ -184,6 +203,11 @@
 | sort | INT | 排序 |
 | created_at | DATETIME | 创建时间 |
 | updated_at | DATETIME | 更新时间 |
+| deleted_at | DATETIME | 删除时间（软删除） |
+
+**冗余字段更新策略：**
+- 图片添加/删除时：事件驱动更新相册图片数
+- 定时任务：每天凌晨全量校准
 
 ### 2.6 文件夹表 (folder)
 
@@ -266,7 +290,7 @@ Request:
 - folderId: 文件夹 ID（可选）
 - title: 标题（可选）
 - description: 描述（可选）
-- tags: 标签（可选，逗号分隔）
+- tags: 标签 JSON 数组（可选）["标签1", "标签2"]
 - isPublic: 是否公开（默认 1）
 
 Response:
@@ -284,6 +308,16 @@ Response:
 }
 ```
 
+**文件上传安全校验：**
+1. 文件大小限制：图片 5MB，视频 100MB，音频 20MB
+2. MIME 类型白名单校验
+3. **Magic Number 校验**：读取文件头部字节验证真实类型
+   - JPEG: `FF D8 FF`
+   - PNG: `89 50 4E 47`
+   - GIF: `47 49 46 38`
+   - WebP: `52 49 46 46 ... 57 45 42 50`
+4. 文件名使用 UUID，不使用用户提供的文件名
+
 #### 获取图片列表
 
 ```
@@ -291,7 +325,7 @@ GET /api/v1/images?page=1&size=20&albumId=1&folderId=1&keyword=风景
 
 Query Parameters:
 - page: 页码
-- size: 每页数量
+- size: 每页数量（最大 50）
 - albumId: 相册 ID（可选）
 - folderId: 文件夹 ID（可选）
 - keyword: 搜索关键词（可选）
@@ -316,10 +350,16 @@ Response:
         "createdAt": "2026-03-07T10:00:00"
       }
     ],
-    "total": 50
+    "total": 50,
+    "page": 1,
+    "size": 20
   }
 }
 ```
+
+**分页说明：**
+- 必须使用分页，不支持全量加载
+- 使用游标分页优化大数据量场景（可选）
 
 #### 批量操作
 
@@ -337,9 +377,16 @@ Request:
 Response:
 {
   "code": 200,
-  "message": "操作成功"
+  "data": {
+    "success": 3,
+    "failed": 0
+  }
 }
 ```
+
+**批量操作原子性：**
+- 使用数据库事务确保操作的原子性
+- 部分失败时返回成功和失败数量，不回滚已成功的操作
 
 ### 3.3 视频接口详细设计
 
@@ -353,10 +400,11 @@ Request (外链视频):
   "title": "我的Vlog",
   "description": "日常生活记录",
   "type": "EXTERNAL",
-  "url": "https://player.bilibili.com/player.html?bvid=xxx",
+  "platform": "BILIBILI",
+  "videoId": "BV1xx411c7mD",
   "coverImage": "/uploads/covers/vlog.jpg",
   "category": "生活",
-  "tags": "vlog,日常",
+  "tags": ["vlog", "日常"],
   "isPublic": true
 }
 
@@ -367,7 +415,7 @@ Content-Type: multipart/form-data
 - description: 描述
 - coverImage: 封面图
 - category: 分类
-- tags: 标签
+- tags: 标签 JSON 数组
 
 Response:
 {
@@ -376,10 +424,26 @@ Response:
     "id": 1,
     "title": "我的Vlog",
     "type": "EXTERNAL",
-    "url": "https://player.bilibili.com/...",
+    "platform": "BILIBILI",
+    "videoId": "BV1xx411c7mD",
     "coverImage": "/uploads/covers/vlog.jpg"
   }
 }
+```
+
+**前端嵌入代码生成：**
+```typescript
+// 根据平台生成安全的嵌入代码
+const getEmbedCode = (platform: string, videoId: string) => {
+  switch (platform) {
+    case 'BILIBILI':
+      return `https://player.bilibili.com/player.html?bvid=${videoId}`;
+    case 'YOUTUBE':
+      return `https://www.youtube.com/embed/${videoId}`;
+    default:
+      return null;
+  }
+};
 ```
 
 ### 3.4 相册接口详细设计
@@ -776,16 +840,34 @@ image:
       <ImageCard :image="image" @click="openLightbox(image)" />
     </div>
   </div>
+  <div ref="loadTrigger" class="load-trigger" />
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const images = ref([])
 const page = ref(1)
 const loading = ref(false)
+const loadTrigger = ref<HTMLElement | null>(null)
+let observer: IntersectionObserver | null = null
 
-// 无限滚动加载
+// 使用 Intersection Observer API 实现无限滚动
+const setupObserver = () => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting && !loading.value) {
+        loadMore()
+      }
+    },
+    { threshold: 0.1 }
+  )
+
+  if (loadTrigger.value) {
+    observer.observe(loadTrigger.value)
+  }
+}
+
 const loadMore = async () => {
   if (loading.value) return
   loading.value = true
@@ -799,7 +881,11 @@ const loadMore = async () => {
 
 onMounted(() => {
   loadMore()
-  window.addEventListener('scroll', handleScroll)
+  setupObserver()
+})
+
+onUnmounted(() => {
+  observer?.disconnect()
 })
 </script>
 ```

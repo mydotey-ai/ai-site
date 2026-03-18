@@ -114,6 +114,7 @@
 | status | VARCHAR(20) | 状态: DEVELOPING / RELEASED / ARCHIVED |
 | created_at | DATETIME | 创建时间 |
 | updated_at | DATETIME | 更新时间 |
+| deleted_at | DATETIME | 删除时间（软删除） |
 
 **技术栈 JSON 格式：**
 ```json
@@ -124,6 +125,11 @@
 - `uk_slug` - slug 唯一索引
 - `idx_status` - 状态索引
 - `idx_created_at` - 创建时间索引
+- `idx_deleted_at` - 软删除索引
+
+**封面图说明：**
+- Phase 3-5 的封面图上传先使用简单实现（直接保存到本地）
+- Phase 6 完成后可集成完整的媒体管理功能
 
 ### 2.3 项目链接表 (project_link)
 
@@ -142,6 +148,10 @@
 - `DOCS` - 文档地址
 - `OTHER` - 其他链接
 
+**级联删除策略：**
+- 删除项目时，级联删除该项目的所有链接
+- 使用数据库外键 `ON DELETE CASCADE` 或应用层事务删除
+
 ### 2.4 标签表 (project_tag)
 
 > 使用独立表，与博客标签解耦，便于独立管理和扩展
@@ -153,6 +163,11 @@
 | slug | VARCHAR(50) | URL 别名 |
 | color | VARCHAR(20) | 标签颜色（HEX） |
 | sort | INT | 排序 |
+| deleted_at | DATETIME | 删除时间（软删除） |
+
+**冗余字段更新策略：**
+- 项目发布/取消发布时：事件驱动更新相关标签的项目数
+- 定时任务：每天凌晨全量校准
 
 ### 2.5 项目标签关联表 (project_tag_relation)
 
@@ -177,6 +192,7 @@
 | | /admin/v1/projects | POST | 创建项目 |
 | | /admin/v1/projects/{id} | PUT | 更新项目 |
 | | /admin/v1/projects/{id} | DELETE | 删除项目 |
+| | /admin/v1/projects/batch | POST | 批量操作（删除/修改状态） |
 | **标签** | /api/v1/project-tags | GET | 项目标签列表 |
 | | /admin/v1/project-tags | POST | 创建标签 |
 | | /admin/v1/project-tags/{id} | PUT | 更新标签 |
@@ -315,6 +331,29 @@ Response:
       "projectCount": 5
     }
   ]
+}
+```
+
+### 3.4 批量操作接口
+
+#### 批量操作项目
+
+```
+POST /admin/v1/projects/batch
+
+Request:
+{
+  "action": "delete",           // delete / archive / release
+  "ids": [1, 2, 3]
+}
+
+Response:
+{
+  "code": 200,
+  "data": {
+    "success": 3,
+    "failed": 0
+  }
 }
 ```
 

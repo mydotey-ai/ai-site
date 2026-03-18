@@ -126,6 +126,7 @@
 | view_count | INT | 浏览量 |
 | created_at | DATETIME | 创建时间 |
 | updated_at | DATETIME | 更新时间 |
+| deleted_at | DATETIME | 删除时间（软删除） |
 
 **状态说明：**
 - `DRAFT` - 草稿
@@ -136,6 +137,11 @@
 - `uk_slug` - slug 唯一索引
 - `idx_category_id` - 分类索引
 - `idx_status` - 状态索引
+- `idx_deleted_at` - 软删除索引
+
+**冗余字段更新策略：**
+- 章节发布/删除时：事件驱动更新小说的字数和章节数
+- 定时任务：每天凌晨全量校准
 
 ### 2.3 章节表 (chapter)
 
@@ -151,10 +157,15 @@
 | view_count | INT | 浏览量 |
 | created_at | DATETIME | 创建时间 |
 | updated_at | DATETIME | 更新时间 |
+| deleted_at | DATETIME | 删除时间（软删除） |
 
 **索引设计：**
 - `idx_novel_id` - 小说索引
 - `uk_novel_chapter_no` - 小说+章节序号唯一索引
+- `idx_deleted_at` - 软删除索引
+
+**级联删除策略：**
+- 删除小说时，级联软删除所有章节
 
 ### 2.4 小说分类表 (novel_category)
 
@@ -182,10 +193,11 @@
 | slug | VARCHAR(100) | URL 别名 |
 | author | VARCHAR(50) | 作者 |
 | content | TEXT | 内容 |
-| category | VARCHAR(50) | 分类（古体诗/现代诗/词等） |
+| category_id | BIGINT | 分类 ID（关联 poetry_category 表） |
 | status | VARCHAR(20) | 状态: DRAFT / PUBLISHED |
 | view_count | INT | 浏览量 |
 | created_at | DATETIME | 创建时间 |
+| deleted_at | DATETIME | 删除时间（软删除） |
 
 **分类说明：**
 - 古体诗
@@ -194,7 +206,16 @@
 - 现代诗
 - 其他
 
-### 2.6 散文表 (essay)
+### 2.6 诗歌分类表 (poetry_category)
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | BIGINT | 主键 |
+| name | VARCHAR(50) | 分类名称 |
+| slug | VARCHAR(50) | URL 别名 |
+| sort | INT | 排序 |
+
+### 2.7 散文表 (essay)
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
@@ -204,13 +225,23 @@
 | author | VARCHAR(50) | 作者 |
 | summary | VARCHAR(500) | 摘要 |
 | content | LONGTEXT | 内容 |
-| category | VARCHAR(50) | 分类 |
+| category_id | BIGINT | 分类 ID（关联 essay_category 表） |
 | status | VARCHAR(20) | 状态: DRAFT / PUBLISHED |
 | view_count | INT | 浏览量 |
 | created_at | DATETIME | 创建时间 |
 | updated_at | DATETIME | 更新时间 |
+| deleted_at | DATETIME | 删除时间（软删除） |
 
-### 2.7 随笔/杂文
+### 2.8 散文分类表 (essay_category)
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | BIGINT | 主键 |
+| name | VARCHAR(50) | 分类名称 |
+| slug | VARCHAR(50) | URL 别名 |
+| sort | INT | 排序 |
+
+### 2.9 随笔/杂文
 
 随笔/杂文复用博客文章表 (`article`)，通过分类区分。
 
@@ -228,6 +259,7 @@
 | /api/v1/novels/{id} | GET | 小说详情 |
 | /api/v1/novels/{id}/chapters | GET | 章节列表 |
 | /api/v1/chapters/{id} | GET | 章节内容 |
+| /api/v1/novels/search | GET | 搜索小说/章节 |
 | /admin/v1/novels | POST | 创建小说 |
 | /admin/v1/novels/{id} | PUT | 更新小说 |
 | /admin/v1/novels/{id} | DELETE | 删除小说 |
@@ -681,6 +713,31 @@ Response:
 }
 ```
 
+#### 阅读进度记录
+
+```typescript
+// 使用 localStorage 存储阅读进度
+interface ReadingProgress {
+  novelId: number;
+  chapterId: number;
+  scrollPosition: number;
+  updatedAt: string;
+}
+
+// 保存进度
+const saveProgress = (progress: ReadingProgress) => {
+  const key = `novel_progress_${progress.novelId}`;
+  localStorage.setItem(key, JSON.stringify(progress));
+};
+
+// 读取进度
+const loadProgress = (novelId: number): ReadingProgress | null => {
+  const key = `novel_progress_${novelId}`;
+  const data = localStorage.getItem(key);
+  return data ? JSON.parse(data) : null;
+};
+```
+
 ---
 
 ## 5. 技术实现要点
@@ -764,7 +821,8 @@ public void incrementViewCount(Long novelId, Long chapterId) {
 #### 应用服务层
 - [ ] NovelCommandService
 - [ ] NovelQueryService
-- [ ] ChapterService
+- [ ] ChapterCommandService
+- [ ] ChapterQueryService
 - [ ] PoetryService
 - [ ] EssayService
 

@@ -136,6 +136,7 @@
 | published_at | DATETIME | 发布时间 |
 | created_at | DATETIME | 创建时间 |
 | updated_at | DATETIME | 更新时间 |
+| deleted_at | DATETIME | 删除时间（软删除） |
 
 **索引设计：**
 - `uk_slug` - slug 唯一索引
@@ -143,6 +144,7 @@
 - `idx_status` - 状态索引
 - `idx_published_at` - 发布时间索引
 - `idx_is_top` - 置顶索引
+- `idx_deleted_at` - 软删除索引
 
 **全文搜索：**
 - MySQL: `FULLTEXT INDEX ft_title_content ON article(title, content)`
@@ -158,8 +160,17 @@
 | description | VARCHAR(200) | 分类描述 |
 | parent_id | BIGINT | 父分类 ID（支持层级） |
 | sort | INT | 排序（越小越前） |
-| article_count | INT | 文章数量（冗余字段，定时更新） |
+| article_count | INT | 文章数量（冗余字段） |
 | created_at | DATETIME | 创建时间 |
+| deleted_at | DATETIME | 删除时间（软删除） |
+
+**冗余字段更新策略：**
+- 文章发布/取消发布时：事件驱动更新对应分类的文章数
+- 定时任务：每天凌晨全量校准（防止数据不一致）
+
+**分类删除策略：**
+- 删除分类时，该分类下的文章 `category_id` 置为 NULL
+- 不允许删除有子分类的父分类
 
 ### 2.4 标签表 (tag)
 
@@ -171,6 +182,11 @@
 | color | VARCHAR(20) | 标签颜色（HEX） |
 | article_count | INT | 文章数量（冗余字段） |
 | created_at | DATETIME | 创建时间 |
+| deleted_at | DATETIME | 删除时间（软删除） |
+
+**冗余字段更新策略：**
+- 文章发布/取消发布时：事件驱动更新相关标签的文章数
+- 定时任务：每天凌晨全量校准
 
 ### 2.5 文章标签关联表 (article_tag)
 
@@ -188,17 +204,22 @@
 | id | BIGINT | 主键 |
 | article_id | BIGINT | 文章 ID |
 | nickname | VARCHAR(50) | 昵称 |
-| email | VARCHAR(100) | 邮箱（不公开显示） |
+| email | VARCHAR(100) | 邮箱（AES 加密存储，不公开显示） |
 | website | VARCHAR(200) | 网站（可选） |
 | content | TEXT | 评论内容 |
 | ip | VARCHAR(50) | IP 地址 |
 | user_agent | VARCHAR(500) | 浏览器信息 |
 | status | VARCHAR(20) | 状态: PENDING / APPROVED / SPAM |
 | created_at | DATETIME | 创建时间 |
+| deleted_at | DATETIME | 删除时间（软删除） |
 
 **索引设计：**
 - `idx_article_id` - 文章索引
 - `idx_status` - 状态索引
+
+**安全说明：**
+- 邮箱使用 AES 加密存储，密钥配置在环境变量
+- IP 地址用于防刷和垃圾评论识别
 
 ---
 
@@ -664,15 +685,20 @@ Response:
 
 #### Markdown 编辑器集成
 
-推荐使用 `@kangc/v-md-editor`（Vue 3 版本）：
+推荐使用 `md-editor-v3`（Vue 3 原生支持）：
 
 ```typescript
+// 安装
+pnpm add md-editor-v3
+
 // 主要功能
 - 实时预览
 - 代码高亮（支持多种语言）
 - 快捷键支持
 - 图片上传
-- 表格、流程图支持（可选）
+- 表格、流程图、数学公式支持
+- 暗黑主题支持
+- 国际化支持
 ```
 
 #### 富文本编辑器集成
