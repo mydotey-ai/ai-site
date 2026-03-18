@@ -38,6 +38,24 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '编辑文章' }
       },
       {
+        path: 'blog/categories',
+        name: 'CategoryManage',
+        component: () => import('@/views/blog/CategoryManage.vue'),
+        meta: { title: '分类管理' }
+      },
+      {
+        path: 'blog/tags',
+        name: 'TagManage',
+        component: () => import('@/views/blog/TagManage.vue'),
+        meta: { title: '标签管理' }
+      },
+      {
+        path: 'blog/comments',
+        name: 'CommentManage',
+        component: () => import('@/views/blog/CommentManage.vue'),
+        meta: { title: '评论管理' }
+      },
+      {
         path: 'portfolio',
         name: 'PortfolioManage',
         component: () => import('@/views/portfolio/ProjectList.vue'),

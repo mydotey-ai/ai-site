@@ -50,19 +50,48 @@ export interface Article {
   slug: string
   summary: string
   content: string
+  contentType: string
   coverImage: string
   categoryId: number
-  categoryName: string
+  category?: Category
   status: number
   viewCount: number
   likeCount: number
-  isTop: boolean
+  isTop: number
+  allowComment: number
+  seoTitle: string
+  seoDescription: string
+  seoKeywords: string
   publishedAt: string
   authorId: number
-  authorName: string
   tags: Tag[]
   createdAt: string
   updatedAt: string
+}
+
+// 文章请求
+export interface ArticleRequest {
+  title: string
+  slug: string
+  summary?: string
+  content?: string
+  contentType?: string
+  coverImage?: string
+  categoryId?: number
+  tagIds?: number[]
+  status?: number
+  isTop?: number
+  allowComment?: number
+  seoTitle?: string
+  seoDescription?: string
+  seoKeywords?: string
+}
+
+// 文章查询参数
+export interface ArticleQuery extends PageQuery {
+  status?: number
+  categoryId?: number
+  keyword?: string
 }
 
 // 分类
@@ -73,6 +102,18 @@ export interface Category {
   description: string
   parentId: number
   sortOrder: number
+  articleCount: number
+  createdAt: string
+  updatedAt: string
+}
+
+// 分类请求
+export interface CategoryRequest {
+  name: string
+  slug: string
+  description?: string
+  parentId?: number
+  sortOrder?: number
 }
 
 // 标签
@@ -80,6 +121,38 @@ export interface Tag {
   id: number
   name: string
   slug: string
+  color: string
+  articleCount: number
+  createdAt: string
+  updatedAt: string
+}
+
+// 标签请求
+export interface TagRequest {
+  name: string
+  slug: string
+  color?: string
+}
+
+// 评论
+export interface Comment {
+  id: number
+  articleId: number
+  parentId: number
+  nickname: string
+  email: string
+  website: string
+  content: string
+  status: string
+  likeCount: number
+  createdAt: string
+  children?: Comment[]
+}
+
+// 评论查询参数
+export interface CommentQuery extends PageQuery {
+  status?: string
+  articleId?: number
 }
 
 // 项目/作品

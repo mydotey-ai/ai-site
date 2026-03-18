@@ -8,7 +8,10 @@ import {
   BriefcaseOutline,
   CreateOutline,
   ImagesOutline,
-  PeopleOutline
+  PeopleOutline,
+  FolderOutline,
+  PricetagsOutline,
+  ChatboxOutline
 } from '@vicons/ionicons5'
 
 const router = useRouter()
@@ -26,6 +29,21 @@ const menuOptions = [
     label: '文章管理',
     key: '/blog',
     icon: () => h(NIcon, null, { default: () => h(NewspaperOutline) })
+  },
+  {
+    label: '分类管理',
+    key: '/blog/categories',
+    icon: () => h(NIcon, null, { default: () => h(FolderOutline) })
+  },
+  {
+    label: '标签管理',
+    key: '/blog/tags',
+    icon: () => h(NIcon, null, { default: () => h(PricetagsOutline) })
+  },
+  {
+    label: '评论管理',
+    key: '/blog/comments',
+    icon: () => h(NIcon, null, { default: () => h(ChatboxOutline) })
   },
   {
     label: '作品管理',
