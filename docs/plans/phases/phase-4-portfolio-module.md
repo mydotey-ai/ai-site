@@ -144,7 +144,7 @@
 
 ### 2.4 标签表 (project_tag)
 
-> 复用现有 tag 表或新建独立表
+> 使用独立表，与博客标签解耦，便于独立管理和扩展
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
@@ -634,7 +634,7 @@ ORDER BY p.created_at DESC;
 ### 6.2 数据库
 - [ ] project 表
 - [ ] project_link 表
-- [ ] project_tag 表（或复用 tag 表）
+- [ ] project_tag 表（独立表）
 - [ ] project_tag_relation 表
 
 ### 6.3 前端开发
@@ -675,6 +675,11 @@ ORDER BY p.created_at DESC;
 ### 兼容性验收
 - [ ] MySQL 环境功能正常
 - [ ] SQLite 环境功能正常
+
+### 测试验收
+- [ ] 后端单元测试覆盖率 > 60%
+- [ ] 核心 API 集成测试通过
+- [ ] 前端组件测试覆盖关键组件
 
 ---
 

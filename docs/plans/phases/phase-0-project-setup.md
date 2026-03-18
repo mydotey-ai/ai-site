@@ -66,8 +66,7 @@
 
 - [x] 创建父 pom.xml
 - [x] 创建 common 模块 pom.xml
-- [x] 创建 api 模块 pom.xml
-- [x] 创建 admin 模块 pom.xml
+- [x] 创建 service 模块 pom.xml
 - [x] 创建启动类
 - [x] 创建 application.yml
 
@@ -95,9 +94,8 @@ ai-site/
 │   ├── site/
 │   └── shared/
 ├── backend/
-│   ├── common/
-│   ├── api/
-│   └── admin/
+│   ├── common/          # 公共模块
+│   └── service/         # 服务模块 (对外服务 + 管理后台)
 └── scripts/
 ```
 
@@ -131,7 +129,7 @@ ai-site/
 1. Claude 记忆系统 (CLAUDE.md + memory/ + rules/)
 2. 完整项目文档框架
 3. 前端双项目结构 (admin + site)
-4. 后端多模块结构 (common + api + admin)
+4. 后端多模块结构 (common + service)
 5. CI/CD 配置和开发规范
 
 ## 下一阶段

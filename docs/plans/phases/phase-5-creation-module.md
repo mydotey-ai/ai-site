@@ -840,6 +840,11 @@ public void incrementViewCount(Long novelId, Long chapterId) {
 - [ ] MySQL 环境功能正常
 - [ ] SQLite 环境功能正常
 
+### 测试验收
+- [ ] 后端单元测试覆盖率 > 60%
+- [ ] 核心 API 集成测试通过
+- [ ] 前端组件测试覆盖关键组件
+
 ---
 
 ## 下一阶段
