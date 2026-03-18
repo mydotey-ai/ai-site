@@ -68,3 +68,5 @@ hs_err_pid*
 replay_pid*
 
 .pids
+# IDE generated files
+.factorypath
