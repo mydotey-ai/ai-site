@@ -25,6 +25,18 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '文章详情' }
       },
       {
+        path: 'category/:id',
+        name: 'BlogCategory',
+        component: () => import('@/views/blog/BlogCategory.vue'),
+        meta: { title: '分类文章' }
+      },
+      {
+        path: 'tag/:id',
+        name: 'BlogTag',
+        component: () => import('@/views/blog/BlogTag.vue'),
+        meta: { title: '标签文章' }
+      },
+      {
         path: 'portfolio',
         name: 'Portfolio',
         component: () => import('@/views/portfolio/PortfolioList.vue'),
