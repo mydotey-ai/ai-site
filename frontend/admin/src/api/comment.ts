@@ -1,5 +1,5 @@
 import { http } from '@/utils/request'
-import type { Comment, CommentQuery, PageResult } from '@/types'
+import type { Comment, CommentQuery, PageResult, ID, IDs } from '@/types'
 
 export const commentApi = {
   /**
@@ -26,42 +26,42 @@ export const commentApi = {
   /**
    * 获取评论详情
    */
-  getById(id: number): Promise<Comment> {
+  getById(id: ID): Promise<Comment> {
     return http.get(`/v1/comments/${id}`)
   },
 
   /**
    * 审核通过
    */
-  approve(id: number): Promise<void> {
+  approve(id: ID): Promise<void> {
     return http.post(`/v1/comments/${id}/approve`)
   },
 
   /**
    * 拒绝评论
    */
-  reject(id: number): Promise<void> {
+  reject(id: ID): Promise<void> {
     return http.post(`/v1/comments/${id}/reject`)
   },
 
   /**
    * 批量审核通过
    */
-  batchApprove(ids: number[]): Promise<void> {
+  batchApprove(ids: IDs): Promise<void> {
     return http.post('/v1/comments/batch-approve', ids)
   },
 
   /**
    * 批量拒绝
    */
-  batchReject(ids: number[]): Promise<void> {
+  batchReject(ids: IDs): Promise<void> {
     return http.post('/v1/comments/batch-reject', ids)
   },
 
   /**
    * 删除评论
    */
-  delete(id: number): Promise<void> {
+  delete(id: ID): Promise<void> {
     return http.delete(`/v1/comments/${id}`)
   }
 }

@@ -1,5 +1,5 @@
 import { http } from '@/utils/request'
-import type { Category, CategoryRequest } from '@/types'
+import type { Category, CategoryRequest, ID } from '@/types'
 
 export const categoryApi = {
   /**
@@ -19,28 +19,28 @@ export const categoryApi = {
   /**
    * 获取分类详情
    */
-  getById(id: number): Promise<Category> {
+  getById(id: ID): Promise<Category> {
     return http.get(`/v1/categories/${id}`)
   },
 
   /**
    * 创建分类
    */
-  create(data: CategoryRequest): Promise<number> {
+  create(data: CategoryRequest): Promise<ID> {
     return http.post('/v1/categories', data)
   },
 
   /**
    * 更新分类
    */
-  update(id: number, data: CategoryRequest): Promise<void> {
+  update(id: ID, data: CategoryRequest): Promise<void> {
     return http.put(`/v1/categories/${id}`, data)
   },
 
   /**
    * 删除分类
    */
-  delete(id: number): Promise<void> {
+  delete(id: ID): Promise<void> {
     return http.delete(`/v1/categories/${id}`)
   }
 }
