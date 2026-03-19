@@ -1,6 +1,8 @@
 package org.mydotey.ai.site.auth.domain.repository;
 
 import org.mydotey.ai.site.auth.domain.entity.User;
+import org.mydotey.ai.site.common.module.domain.entity.PageQuery;
+import org.mydotey.ai.site.common.module.interfaces.PageResult;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +58,16 @@ public interface UserRepository {
      * 查找所有用户
      */
     List<User> findAll();
+
+    /**
+     * 分页查询用户
+     */
+    PageResult<User> findByPage(PageQuery query);
+
+    /**
+     * 统计用户总数
+     */
+    long count();
 
     /**
      * 获取用户的角色代码列表

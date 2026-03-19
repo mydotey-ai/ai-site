@@ -1,9 +1,13 @@
 package org.mydotey.ai.site.auth.infrastructure.persistence.repository;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.mydotey.ai.site.auth.domain.entity.User;
 import org.mydotey.ai.site.auth.domain.repository.UserRepository;
 import org.mydotey.ai.site.auth.infrastructure.persistence.mapper.UserMapper;
+import org.mydotey.ai.site.common.module.domain.entity.PageQuery;
+import org.mydotey.ai.site.common.module.interfaces.PageResult;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -63,6 +67,19 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<User> findAll() {
         return userMapper.selectList(null);
+    }
+
+    @Override
+    public PageResult<User> findByPage(PageQuery query) {
+        Page<User> page = new Page<>(query.getPage(), query.getSize());
+        Page<User> result = userMapper.selectPage(page, new LambdaQueryWrapper<User>()
+                .orderByDesc(User::getCreatedAt));
+        return new PageResult<>(result.getRecords(), result.getTotal());
+    }
+
+    @Override
+    public long count() {
+        return userMapper.selectCount(null);
     }
 
     @Override

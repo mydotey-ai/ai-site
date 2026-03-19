@@ -27,7 +27,28 @@ export interface User {
   nickname: string
   avatar: string
   bio: string
+  status: number
   roles: string[]
+  createdAt: string
+  updatedAt: string
+}
+
+// 用户请求
+export interface UserRequest {
+  username: string
+  password?: string
+  email?: string
+  nickname?: string
+  avatar?: string
+  bio?: string
+  status?: number
+  roleIds?: number[]
+}
+
+// 用户查询参数
+export interface UserQuery extends PageQuery {
+  keyword?: string
+  status?: number
 }
 
 // 登录请求
