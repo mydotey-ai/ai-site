@@ -46,22 +46,15 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 授权配置
                 .authorizeHttpRequests(auth -> auth
-                        // 开放接口
+                        // 开放接口 - Site API
+                        .requestMatchers("/api/v1/**").permitAll()
+                        // 开放接口 - Admin Auth
                         .requestMatchers(
-                                "/api/v1/auth/**",
-                                "/api/v1/articles/**",
-                                "/api/v1/categories/**",
-                                "/api/v1/tags/**",
-                                "/api/v1/comments/**",
-                                "/api/v1/projects/**",
-                                "/api/v1/project-tags/**",
-                                "/api/v1/novels/**",
-                                "/api/v1/poetry/**",
-                                "/api/v1/essays/**",
-                                "/api/v1/albums/**",
-                                "/api/v1/images/**",
-                                "/api/v1/videos/**",
-                                "/api/v1/audios/**",
+                                "/admin/v1/auth/login",
+                                "/admin/v1/auth/register"
+                        ).permitAll()
+                        // 开放接口 - Swagger & Actuator
+                        .requestMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",

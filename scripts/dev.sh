@@ -64,12 +64,10 @@ start_backend() {
 
     print_info "启动后端服务..."
 
-    # 检查是否需要构建
-    if [ ! -f "$BACKEND_DIR/service/target/service-1.0.0-SNAPSHOT.jar" ]; then
-        print_info "首次启动，构建后端项目..."
-        cd "$BACKEND_DIR"
-        mvn clean install -DskipTests -q
-    fi
+    # 构建后端项目
+    print_info "编译后端项目..."
+    cd "$BACKEND_DIR"
+    mvn clean compile -DskipTests -q
 
     cd "$BACKEND_DIR/service"
     nohup mvn spring-boot:run -q > "$LOG_DIR/backend.log" 2>&1 &
