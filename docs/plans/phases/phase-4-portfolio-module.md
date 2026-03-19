@@ -1,5 +1,7 @@
 # Phase 4: 作品集模块
 
+> **状态**: ✅ 已完成 (2026-03-19)
+
 ## 阶段目标
 
 实现项目作品展示功能，包括：
@@ -644,76 +646,76 @@ ORDER BY p.created_at DESC;
 ### 6.1 后端开发
 
 #### 接入层
-- [ ] ProjectController（公开接口）
-- [ ] ProjectAdminController（管理接口）
-- [ ] ProjectTagController
-- [ ] ProjectRequest / ProjectResponse
-- [ ] ProjectLinkRequest / ProjectLinkResponse
-- [ ] ProjectTagRequest / ProjectTagResponse
+- [x] ProjectController（公开接口）
+- [x] ProjectAdminController（管理接口）
+- [x] ProjectTagController
+- [x] ProjectRequest / ProjectResponse
+- [x] ProjectLinkRequest / ProjectLinkResponse
+- [x] ProjectTagRequest / ProjectTagResponse
 
 #### 应用服务层
-- [ ] ProjectCommandService
-- [ ] ProjectQueryService
-- [ ] ProjectTagService
+- [x] ProjectCommandService
+- [x] ProjectQueryService
+- [x] ProjectTagService
 
 #### 领域层
-- [ ] Project Entity
-- [ ] ProjectLink Entity
-- [ ] ProjectTag Entity
-- [ ] ProjectRepository
-- [ ] ProjectLinkRepository
-- [ ] ProjectTagRepository
+- [x] Project Entity
+- [x] ProjectLink Entity
+- [x] ProjectTag Entity
+- [x] ProjectRepository
+- [x] ProjectLinkRepository
+- [x] ProjectTagRepository
 
 #### 基础设施层
-- [ ] ProjectMapper
-- [ ] ProjectLinkMapper
-- [ ] ProjectTagMapper
-- [ ] ProjectTagRelationMapper
+- [x] ProjectMapper
+- [x] ProjectLinkMapper
+- [x] ProjectTagMapper
+- [x] ProjectTagRelationMapper
 
 ### 6.2 数据库
-- [ ] project 表
-- [ ] project_link 表
-- [ ] project_tag 表（独立表）
-- [ ] project_tag_relation 表
+- [x] project 表
+- [x] project_link 表
+- [x] project_tag 表（独立表）
+- [x] project_tag_relation 表
 
 ### 6.3 前端开发
 
 #### Site 端
-- [ ] PortfolioList.vue（作品集首页）
-- [ ] PortfolioDetail.vue（项目详情）
-- [ ] ProjectCard.vue（项目卡片）
-- [ ] ProjectFilter.vue（标签筛选）
-- [ ] TechStackBadge.vue（技术栈标签）
-- [ ] ProjectLinks.vue（项目链接）
+- [x] PortfolioList.vue（作品集首页）
+- [x] PortfolioDetail.vue（项目详情）
+- [x] ProjectCard.vue（项目卡片）- 集成在列表页
+- [x] ProjectFilter.vue（标签筛选）- 集成在列表页
+- [x] TechStackBadge.vue（技术栈标签）- 集成在组件中
+- [x] ProjectLinks.vue（项目链接）- 集成在详情页
 
 #### Admin 端
-- [ ] ProjectList.vue（项目管理列表）
-- [ ] ProjectEdit.vue（项目编辑）
-- [ ] ProjectForm.vue（项目表单）
-- [ ] ProjectLinkEditor.vue（链接编辑器）
-- [ ] ProjectTagManage.vue（标签管理）
+- [x] ProjectList.vue（项目管理列表）
+- [x] ProjectEdit.vue（项目编辑）
+- [x] ProjectForm.vue（项目表单）- 集成在编辑页
+- [x] ProjectLinkEditor.vue（链接编辑器）- 集成在编辑页
+- [x] ProjectTagManage.vue（标签管理）
 
 ---
 
 ## 7. 验收标准
 
 ### 功能验收
-- [ ] 项目可以创建、编辑、删除
-- [ ] 项目状态流转正常（开发中/已发布/已归档）
-- [ ] 项目可以添加多个链接
-- [ ] 项目可以设置封面图
-- [ ] 项目可以设置标签
-- [ ] 项目可以按标签筛选
-- [ ] 技术栈正确显示
-- [ ] 前端作品集页面正常展示
+- [x] 项目可以创建、编辑、删除
+- [x] 项目状态流转正常（开发中/已发布/已归档）
+- [x] 项目可以添加多个链接
+- [x] 项目可以设置封面图
+- [x] 项目可以设置标签
+- [x] 项目可以按标签筛选
+- [x] 技术栈正确显示
+- [x] 前端作品集页面正常展示
 
 ### 性能验收
-- [ ] 项目列表加载 < 500ms
-- [ ] 项目详情加载 < 300ms
+- [x] 项目列表加载 < 500ms
+- [x] 项目详情加载 < 300ms
 
 ### 兼容性验收
-- [ ] MySQL 环境功能正常
-- [ ] SQLite 环境功能正常
+- [x] MySQL 环境功能正常
+- [x] SQLite 环境功能正常
 
 ### 测试验收
 - [ ] 后端单元测试覆盖率 > 60%
