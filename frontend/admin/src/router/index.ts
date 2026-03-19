@@ -80,10 +80,40 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '项目标签管理' }
       },
       {
-        path: 'creation',
-        name: 'CreationManage',
-        component: () => import('@/views/creation/NovelManage.vue'),
-        meta: { title: '创作管理' }
+        path: 'creation/novels',
+        name: 'NovelList',
+        component: () => import('@/views/creation/NovelList.vue'),
+        meta: { title: '小说管理' }
+      },
+      {
+        path: 'creation/novels/create',
+        name: 'NovelCreate',
+        component: () => import('@/views/creation/NovelEdit.vue'),
+        meta: { title: '新建小说' }
+      },
+      {
+        path: 'creation/novels/edit/:id',
+        name: 'NovelEdit',
+        component: () => import('@/views/creation/NovelEdit.vue'),
+        meta: { title: '编辑小说' }
+      },
+      {
+        path: 'creation/novels/:novelId/chapters',
+        name: 'ChapterManage',
+        component: () => import('@/views/creation/ChapterManage.vue'),
+        meta: { title: '章节管理' }
+      },
+      {
+        path: 'creation/poetry',
+        name: 'PoetryManage',
+        component: () => import('@/views/creation/PoetryManage.vue'),
+        meta: { title: '诗歌管理' }
+      },
+      {
+        path: 'creation/essays',
+        name: 'EssayManage',
+        component: () => import('@/views/creation/EssayManage.vue'),
+        meta: { title: '散文管理' }
       },
       {
         path: 'media',

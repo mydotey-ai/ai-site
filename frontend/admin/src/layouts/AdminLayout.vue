@@ -52,8 +52,22 @@ const menuOptions = [
   },
   {
     label: '创作管理',
-    key: '/creation',
-    icon: () => h(NIcon, null, { default: () => h(CreateOutline) })
+    key: 'creation',
+    icon: () => h(NIcon, null, { default: () => h(CreateOutline) }),
+    children: [
+      {
+        label: '小说管理',
+        key: '/creation/novels'
+      },
+      {
+        label: '诗歌管理',
+        key: '/creation/poetry'
+      },
+      {
+        label: '散文管理',
+        key: '/creation/essays'
+      }
+    ]
   },
   {
     label: '媒体管理',

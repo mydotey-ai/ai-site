@@ -49,16 +49,46 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '作品详情' }
       },
       {
-        path: 'creation',
-        name: 'Creation',
+        path: 'creation/novels',
+        name: 'NovelList',
         component: () => import('@/views/creation/NovelList.vue'),
-        meta: { title: '创作' }
+        meta: { title: '小说' }
       },
       {
-        path: 'novel/:id',
-        name: 'NovelReader',
+        path: 'creation/novels/:slug',
+        name: 'NovelDetail',
+        component: () => import('@/views/creation/NovelDetail.vue'),
+        meta: { title: '小说详情' }
+      },
+      {
+        path: 'creation/chapters/:id',
+        name: 'ChapterReader',
         component: () => import('@/views/creation/NovelReader.vue'),
-        meta: { title: '小说阅读' }
+        meta: { title: '章节阅读' }
+      },
+      {
+        path: 'creation/poetry',
+        name: 'PoetryList',
+        component: () => import('@/views/creation/PoetryList.vue'),
+        meta: { title: '诗歌' }
+      },
+      {
+        path: 'creation/poetry/:slug',
+        name: 'PoetryDetail',
+        component: () => import('@/views/creation/PoetryDetail.vue'),
+        meta: { title: '诗歌详情' }
+      },
+      {
+        path: 'creation/essays',
+        name: 'EssayList',
+        component: () => import('@/views/creation/EssayList.vue'),
+        meta: { title: '散文' }
+      },
+      {
+        path: 'creation/essays/:slug',
+        name: 'EssayDetail',
+        component: () => import('@/views/creation/EssayDetail.vue'),
+        meta: { title: '散文详情' }
       },
       {
         path: 'media',

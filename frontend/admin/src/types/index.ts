@@ -229,25 +229,150 @@ export interface Novel {
   title: string
   slug: string
   author: string
-  description: string
+  summary: string
   coverImage: string
-  status: number
+  categoryId: number
+  category?: NovelCategory
+  status: string
   wordCount: number
+  chapterCount: number
   viewCount: number
-  chapters: Chapter[]
   createdAt: string
   updatedAt: string
+}
+
+// 小说分类
+export interface NovelCategory {
+  id: number
+  name: string
+  slug: string
+  sort: number
+}
+
+// 小说请求
+export interface NovelRequest {
+  title: string
+  slug?: string
+  author?: string
+  summary?: string
+  coverImage?: string
+  categoryId?: number
+  status?: string
+}
+
+// 小说查询参数
+export interface NovelQuery extends PageQuery {
+  categoryId?: number
+  status?: string
+  keyword?: string
 }
 
 // 章节
 export interface Chapter {
   id: number
   novelId: number
+  novelTitle?: string
   title: string
   content: string
   wordCount: number
-  chapterNumber: number
-  status: number
+  chapterNo: number
+  status: string
+  viewCount: number
+  prevChapterId?: number
+  nextChapterId?: number
+  createdAt: string
+  updatedAt: string
+}
+
+// 章节请求
+export interface ChapterRequest {
+  novelId: number
+  title: string
+  content?: string
+  chapterNo?: number
+  status?: string
+}
+
+// 诗歌分类
+export interface PoetryCategory {
+  id: number
+  name: string
+  slug: string
+  sort: number
+}
+
+// 诗歌
+export interface Poetry {
+  id: number
+  title: string
+  slug: string
+  author: string
+  content: string
+  categoryId: number
+  category?: PoetryCategory
+  status: string
+  viewCount: number
+  createdAt: string
+  updatedAt: string
+}
+
+// 诗歌请求
+export interface PoetryRequest {
+  title: string
+  slug?: string
+  author?: string
+  content?: string
+  categoryId?: number
+  status?: string
+}
+
+// 诗歌查询参数
+export interface PoetryQuery extends PageQuery {
+  categoryId?: number
+  status?: string
+  keyword?: string
+}
+
+// 散文分类
+export interface EssayCategory {
+  id: number
+  name: string
+  slug: string
+  sort: number
+}
+
+// 散文
+export interface Essay {
+  id: number
+  title: string
+  slug: string
+  author: string
+  summary: string
+  content: string
+  categoryId: number
+  category?: EssayCategory
+  status: string
+  viewCount: number
+  createdAt: string
+  updatedAt: string
+}
+
+// 散文请求
+export interface EssayRequest {
+  title: string
+  slug?: string
+  author?: string
+  summary?: string
+  content?: string
+  categoryId?: number
+  status?: string
+}
+
+// 散文查询参数
+export interface EssayQuery extends PageQuery {
+  categoryId?: number
+  status?: string
+  keyword?: string
 }
 
 // 图片

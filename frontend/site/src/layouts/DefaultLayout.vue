@@ -12,7 +12,7 @@ const navLinks = [
   { to: '/', label: '首页' },
   { to: '/blog', label: '博客' },
   { to: '/portfolio', label: '作品集' },
-  { to: '/creation', label: '创作' },
+  { to: '/creation/novels', label: '创作' },
   { to: '/media', label: '图库' },
   { to: '/about', label: '关于' }
 ]
