@@ -194,6 +194,15 @@ org.mydotey.ai.site/           # service 模块基础包
 
 ---
 
+## API 路径规范
+
+| 服务 | API 前缀 | 示例 |
+|------|---------|------|
+| Site API | `/api/v1` | `/api/v1/articles` |
+| Admin API | `/admin/v1` | `/admin/v1/articles` |
+
+---
+
 ## API 文档
 
 - 使用 SpringDoc 生成 OpenAPI 文档
