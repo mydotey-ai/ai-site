@@ -19,7 +19,7 @@ import java.util.List;
  * @author AI-Site
  */
 @RestController
-@RequestMapping("/api/admin/v1/tags")
+@RequestMapping("/admin/v1/tags")
 @io.swagger.v3.oas.annotations.tags.Tag(name = "标签管理", description = "标签管理接口")
 @RequiredArgsConstructor
 public class TagAdminController {

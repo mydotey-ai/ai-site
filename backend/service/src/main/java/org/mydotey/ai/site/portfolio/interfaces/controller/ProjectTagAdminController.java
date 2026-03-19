@@ -12,19 +12,31 @@ import org.mydotey.ai.site.portfolio.interfaces.dto.ProjectTagRequest;
 import org.mydotey.ai.site.portfolio.interfaces.dto.ProjectTagResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 项目标签管理控制器
  *
  * @author AI-Site
  */
 @RestController
-@RequestMapping("/api/admin/v1/project-tags")
+@RequestMapping("/admin/v1/project-tags")
 @Tag(name = "项目标签管理", description = "项目标签管理接口")
 @RequiredArgsConstructor
 public class ProjectTagAdminController {
 
     private final ProjectTagCommandService projectTagCommandService;
     private final ProjectTagQueryService projectTagQueryService;
+
+    @GetMapping
+    @Operation(summary = "获取标签列表")
+    public Result<List<ProjectTagResponse>> list() {
+        List<ProjectTag> tags = projectTagQueryService.findAll();
+        List<ProjectTagResponse> response = tags.stream()
+                .map(this::toResponse)
+                .toList();
+        return Result.success(response);
+    }
 
     @PostMapping
     @Operation(summary = "创建标签")
@@ -60,5 +72,19 @@ public class ProjectTagAdminController {
         tag.setColor(request.getColor());
         tag.setSort(request.getSort());
         return tag;
+    }
+
+    /**
+     * 转换为响应DTO
+     */
+    private ProjectTagResponse toResponse(ProjectTag tag) {
+        return ProjectTagResponse.builder()
+                .id(tag.getId())
+                .name(tag.getName())
+                .slug(tag.getSlug())
+                .color(tag.getColor())
+                .sort(tag.getSort())
+                .projectCount(tag.getProjectCount())
+                .build();
     }
 }

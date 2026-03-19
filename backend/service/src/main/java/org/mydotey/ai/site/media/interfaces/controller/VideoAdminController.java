@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/admin/v1/videos")
+@RequestMapping("/admin/v1/videos")
 @RequiredArgsConstructor
 @Tag(name = "视频管理接口", description = "视频管理接口（需要管理员权限）")
 @PreAuthorize("hasRole('ADMIN')")

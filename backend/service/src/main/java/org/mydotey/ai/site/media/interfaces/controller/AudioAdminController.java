@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/admin/v1/audios")
+@RequestMapping("/admin/v1/audios")
 @RequiredArgsConstructor
 @Tag(name = "音频管理接口", description = "音频管理接口（需要管理员权限）")
 @PreAuthorize("hasRole('ADMIN')")

@@ -3,7 +3,7 @@ import type { Result } from '@/types'
 
 // 创建 axios 实例
 const request: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/admin',
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json'

@@ -28,7 +28,7 @@ import java.util.List;
  * @author AI-Site
  */
 @RestController
-@RequestMapping("/api/admin/v1/novels")
+@RequestMapping("/admin/v1/novels")
 @Tag(name = "小说管理", description = "小说管理接口")
 @RequiredArgsConstructor
 public class NovelAdminController {

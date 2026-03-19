@@ -20,7 +20,7 @@ import java.util.List;
  * @author AI-Site
  */
 @RestController
-@RequestMapping("/api/admin/v1/folders")
+@RequestMapping("/admin/v1/folders")
 @RequiredArgsConstructor
 @Tag(name = "文件夹管理接口", description = "文件夹管理接口（需要管理员权限）")
 @PreAuthorize("hasRole('ADMIN')")

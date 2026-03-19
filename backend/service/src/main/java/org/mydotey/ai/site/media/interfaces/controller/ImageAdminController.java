@@ -26,7 +26,7 @@ import java.io.IOException;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/admin/v1/images")
+@RequestMapping("/admin/v1/images")
 @RequiredArgsConstructor
 @Tag(name = "图片管理接口", description = "图片管理接口（需要管理员权限）")
 @PreAuthorize("hasRole('ADMIN')")

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  * @author AI-Site
  */
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/admin/v1/auth")
 @Tag(name = "认证", description = "用户认证相关接口")
 @RequiredArgsConstructor
 public class AuthController {

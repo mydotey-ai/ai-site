@@ -201,6 +201,8 @@ org.mydotey.ai.site/           # service 模块基础包
 | Site API | `/api/v1` | `/api/v1/articles` |
 | Admin API | `/admin/v1` | `/admin/v1/articles` |
 
+**注意**：Auth API 属于 Admin API，使用 `/admin/v1/auth` 前缀。
+
 ---
 
 ## API 文档

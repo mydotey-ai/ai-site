@@ -25,7 +25,7 @@ import java.util.List;
  * @author AI-Site
  */
 @RestController
-@RequestMapping("/api/admin/v1/projects")
+@RequestMapping("/admin/v1/projects")
 @Tag(name = "项目管理", description = "项目管理接口")
 @RequiredArgsConstructor
 public class ProjectAdminController {

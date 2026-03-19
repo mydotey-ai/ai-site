@@ -23,7 +23,7 @@ import java.util.List;
  * @author AI-Site
  */
 @RestController
-@RequestMapping("/api/admin/v1/articles")
+@RequestMapping("/admin/v1/articles")
 @Tag(name = "文章管理", description = "文章管理接口")
 @RequiredArgsConstructor
 public class ArticleAdminController {

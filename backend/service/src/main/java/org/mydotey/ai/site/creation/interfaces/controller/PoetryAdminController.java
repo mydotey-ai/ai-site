@@ -23,7 +23,7 @@ import java.util.List;
  * @author AI-Site
  */
 @RestController
-@RequestMapping("/api/admin/v1/poetry")
+@RequestMapping("/admin/v1/poetry")
 @Tag(name = "诗歌管理", description = "诗歌管理接口")
 @RequiredArgsConstructor
 public class PoetryAdminController {

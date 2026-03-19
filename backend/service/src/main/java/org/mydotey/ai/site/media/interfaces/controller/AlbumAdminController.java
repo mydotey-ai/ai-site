@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * @author AI-Site
  */
 @RestController
-@RequestMapping("/api/admin/v1/albums")
+@RequestMapping("/admin/v1/albums")
 @RequiredArgsConstructor
 @Tag(name = "相册管理接口", description = "相册管理接口（需要管理员权限）")
 @PreAuthorize("hasRole('ADMIN')")

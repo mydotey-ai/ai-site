@@ -21,7 +21,7 @@ import java.util.List;
  * @author AI-Site
  */
 @RestController
-@RequestMapping("/api/admin/v1/categories")
+@RequestMapping("/admin/v1/categories")
 @Tag(name = "分类管理", description = "分类管理接口")
 @RequiredArgsConstructor
 public class CategoryAdminController {
