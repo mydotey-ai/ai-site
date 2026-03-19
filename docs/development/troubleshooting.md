@@ -74,6 +74,46 @@ JDK 25 加强了模块封装，Lombok 需要访问 JDK 编译器内部 API，但
 
 ---
 
+## 前端 API 路径重复导致 500 错误
+
+**日期**: 2026-03-19
+
+**环境**:
+- 前端: Vue 3.5 + Axios
+- 后端: Spring Boot 3.5
+
+**问题描述**:
+前端请求 API 时返回 500 错误，后端日志显示：
+```
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource api/api/v1/project-tags.
+```
+请求路径中出现了重复的 `/api` 前缀。
+
+**原因分析**:
+前端 `request.ts` 中 baseURL 已配置为 `/api`：
+```typescript
+baseURL: import.meta.env.VITE_API_BASE_URL || '/api'
+```
+但 API 文件中的路径又包含了 `/api` 前缀：
+```typescript
+// 错误示例
+return http.get('/api/admin/v1/images', { params })
+```
+导致最终请求路径变成 `/api/api/admin/v1/images`。
+
+**解决方案**:
+API 文件中的路径不应包含 `/api` 前缀：
+```typescript
+// 正确示例
+return http.get('/admin/v1/images', { params })
+```
+
+**预防措施**:
+- API 路径统一使用相对路径，不带 baseURL 前缀
+- Code Review 时注意检查新增 API 文件的路径配置
+
+---
+
 ## 记录区域
 
 （问题排查记录将在开发过程中逐步添加）

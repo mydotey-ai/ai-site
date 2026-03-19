@@ -417,9 +417,12 @@ AND a.status = 'PUBLISHED';
 
 ```
 src/main/resources/db/migration/
-├── V1.0.0__init_schema.sql        # 初始化用户相关表
-├── V1.1.0__add_blog_tables.sql    # 添加博客相关表
-├── V1.2.0__add_portfolio_tables.sql # 添加作品集相关表
-├── V1.3.0__add_creation_tables.sql # 添加创作相关表
-└── V1.4.0__add_media_tables.sql   # 添加多媒体相关表
+├── V1.0.0__init_schema.sql          # 初始化基础表结构
+├── V1.0.1__init_data.sql            # 初始化基础数据
+├── V1.1.0__add_blog_fields.sql      # 博客字段扩展
+├── V1.1.1__create_comment_table.sql # 评论表
+├── V1.1.2__fix_article_tag_id.sql   # 文章标签修复
+├── V1.2.0__portfolio_module.sql     # 作品集模块
+├── V1.3.0__creation_module.sql      # 创作模块
+└── V1.4.0__media_module.sql         # 多媒体模块
 ```
