@@ -380,14 +380,58 @@ export interface Image {
   id: number
   title: string
   description: string
+  originalName: string
   url: string
   thumbnailUrl: string
   albumId: number
+  album?: AlbumVO
+  folderId: number
   width: number
   height: number
   size: number
   mimeType: string
+  tags: string[]
+  isPublic: number
+  viewCount: number
   createdAt: string
+}
+
+// 图片请求
+export interface ImageRequest {
+  title?: string
+  description?: string
+  albumId?: number
+  folderId?: number
+  tags?: string[]
+  isPublic?: number
+}
+
+// 图片上传响应
+export interface ImageUploadResponse {
+  id: number
+  title: string
+  url: string
+  thumbnailUrl: string
+  width: number
+  height: number
+  size: number
+  createdAt: string
+}
+
+// 图片查询参数
+export interface ImageQuery extends PageQuery {
+  albumId?: number
+  folderId?: number
+  keyword?: string
+  isPublic?: number
+}
+
+// 批量操作请求
+export interface BatchRequest {
+  action: 'move' | 'delete' | 'setPublic' | 'setPrivate'
+  ids: number[]
+  targetAlbumId?: number
+  targetFolderId?: number
 }
 
 // 相册
@@ -397,7 +441,132 @@ export interface Album {
   slug: string
   description: string
   coverImage: string
-  sortOrder: number
   imageCount: number
+  isPublic: number
+  sort: number
   createdAt: string
+  updatedAt: string
+  images?: Image[]
+}
+
+// 相册请求
+export interface AlbumRequest {
+  name: string
+  slug?: string
+  description?: string
+  coverImage?: string
+  isPublic?: number
+  sort?: number
+}
+
+// 相册查询参数
+export interface AlbumQuery extends PageQuery {
+  isPublic?: number
+}
+
+// 相册 VO（嵌套在图片响应中）
+export interface AlbumVO {
+  id: number
+  name: string
+  slug: string
+}
+
+// 视频
+export interface Video {
+  id: number
+  title: string
+  description: string
+  coverImage: string
+  type: string
+  platform: string
+  videoId: string
+  url: string
+  duration: number
+  size: number
+  category: string
+  tags: string[]
+  isPublic: number
+  viewCount: number
+  embedUrl: string
+  createdAt: string
+}
+
+// 视频请求
+export interface VideoRequest {
+  title: string
+  description?: string
+  coverImage?: string
+  type: string
+  platform?: string
+  videoId?: string
+  category?: string
+  tags?: string[]
+  isPublic?: number
+}
+
+// 视频查询参数
+export interface VideoQuery extends PageQuery {
+  type?: string
+  platform?: string
+  category?: string
+  isPublic?: number
+}
+
+// 音频
+export interface Audio {
+  id: number
+  title: string
+  description: string
+  coverImage: string
+  type: string
+  platform: string
+  audioId: string
+  url: string
+  duration: number
+  size: number
+  category: string
+  tags: string[]
+  isPublic: number
+  viewCount: number
+  createdAt: string
+}
+
+// 音频请求
+export interface AudioRequest {
+  title: string
+  description?: string
+  coverImage?: string
+  type: string
+  platform?: string
+  audioId?: string
+  category?: string
+  tags?: string[]
+  isPublic?: number
+}
+
+// 音频查询参数
+export interface AudioQuery extends PageQuery {
+  type?: string
+  platform?: string
+  category?: string
+  isPublic?: number
+}
+
+// 文件夹
+export interface Folder {
+  id: number
+  name: string
+  parentId: number
+  type: string
+  sort: number
+  createdAt: string
+  children?: Folder[]
+}
+
+// 文件夹请求
+export interface FolderRequest {
+  name: string
+  parentId?: number
+  type: string
+  sort?: number
 }

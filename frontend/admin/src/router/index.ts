@@ -119,7 +119,25 @@ const routes: RouteRecordRaw[] = [
         path: 'media',
         name: 'MediaManage',
         component: () => import('@/views/media/ImageManage.vue'),
-        meta: { title: '媒体管理' }
+        meta: { title: '图片管理' }
+      },
+      {
+        path: 'media/albums',
+        name: 'AlbumManage',
+        component: () => import('@/views/media/AlbumManage.vue'),
+        meta: { title: '相册管理' }
+      },
+      {
+        path: 'media/videos',
+        name: 'VideoManage',
+        component: () => import('@/views/media/VideoManage.vue'),
+        meta: { title: '视频管理' }
+      },
+      {
+        path: 'media/audios',
+        name: 'AudioManage',
+        component: () => import('@/views/media/AudioManage.vue'),
+        meta: { title: '音频管理' }
       },
       {
         path: 'user',

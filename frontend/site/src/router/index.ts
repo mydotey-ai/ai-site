@@ -97,6 +97,30 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '图库' }
       },
       {
+        path: 'media/album/:slug',
+        name: 'AlbumDetail',
+        component: () => import('@/views/media/AlbumDetail.vue'),
+        meta: { title: '相册详情' }
+      },
+      {
+        path: 'media/videos',
+        name: 'VideoList',
+        component: () => import('@/views/media/VideoList.vue'),
+        meta: { title: '视频' }
+      },
+      {
+        path: 'media/videos/:id',
+        name: 'VideoDetail',
+        component: () => import('@/views/media/VideoDetail.vue'),
+        meta: { title: '视频详情' }
+      },
+      {
+        path: 'media/audios',
+        name: 'AudioList',
+        component: () => import('@/views/media/AudioList.vue'),
+        meta: { title: '音频' }
+      },
+      {
         path: 'about',
         name: 'About',
         component: () => import('@/views/about/AboutPage.vue'),

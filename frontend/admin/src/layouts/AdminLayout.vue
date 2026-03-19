@@ -71,8 +71,26 @@ const menuOptions = [
   },
   {
     label: '媒体管理',
-    key: '/media',
-    icon: () => h(NIcon, null, { default: () => h(ImagesOutline) })
+    key: 'media',
+    icon: () => h(NIcon, null, { default: () => h(ImagesOutline) }),
+    children: [
+      {
+        label: '图片管理',
+        key: '/media'
+      },
+      {
+        label: '相册管理',
+        key: '/media/albums'
+      },
+      {
+        label: '视频管理',
+        key: '/media/videos'
+      },
+      {
+        label: '音频管理',
+        key: '/media/audios'
+      }
+    ]
   },
   {
     label: '用户管理',

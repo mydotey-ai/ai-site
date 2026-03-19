@@ -21,8 +21,46 @@ spring:
     serialization:
       write-dates-as-timestamps: false
 
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
 server:
   port: 8080
+
+# 存储配置
+storage:
+  type: local
+  local:
+    base-path: ./uploads
+    url-prefix: /uploads
+
+# 上传配置
+upload:
+  image:
+    max-size: 5242880
+    allowed-types: image/jpeg,image/png,image/gif,image/webp
+  video:
+    max-size: 104857600
+    allowed-types: video/mp4,video/webm
+  audio:
+    max-size: 20971520
+    allowed-types: audio/mpeg,audio/wav,audio/mp3
+
+# 图片处理配置
+image:
+  thumbnail:
+    enabled: true
+    width: 300
+  compress:
+    enabled: true
+    quality: 0.8
+  watermark:
+    enabled: false
+    text: ""
+    position: bottom-right
+    opacity: 0.5
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml

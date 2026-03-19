@@ -47,7 +47,13 @@ public enum ErrorCode {
     // 媒体相关 406xx
     IMAGE_NOT_FOUND(40601, "图片不存在"),
     ALBUM_NOT_FOUND(40602, "相册不存在"),
-    UPLOAD_FAILED(40603, "文件上传失败");
+    UPLOAD_FAILED(40603, "文件上传失败"),
+    VIDEO_NOT_FOUND(40604, "视频不存在"),
+    AUDIO_NOT_FOUND(40605, "音频不存在"),
+    FOLDER_NOT_FOUND(40606, "文件夹不存在"),
+    FILE_TYPE_NOT_ALLOWED(40607, "文件类型不允许"),
+    FILE_SIZE_EXCEEDED(40608, "文件大小超出限制"),
+    INVALID_FILE_CONTENT(40609, "文件内容校验失败");
 
     /**
      * 错误码
