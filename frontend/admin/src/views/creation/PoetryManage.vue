@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, h } from 'vue'
-import { useRouter } from 'vue-router'
 import {
   NButton,
   NDataTable,
@@ -18,7 +17,6 @@ import {
 import { poetryApi } from '@/api/creation'
 import type { Poetry, PoetryCategory, PoetryQuery, PoetryRequest } from '@/types'
 
-const router = useRouter()
 const message = useMessage()
 
 const poetryList = ref<Poetry[]>([])
