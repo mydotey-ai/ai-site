@@ -62,6 +62,24 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '作品管理' }
       },
       {
+        path: 'portfolio/create',
+        name: 'ProjectCreate',
+        component: () => import('@/views/portfolio/ProjectEdit.vue'),
+        meta: { title: '创建项目' }
+      },
+      {
+        path: 'portfolio/edit/:id',
+        name: 'ProjectEdit',
+        component: () => import('@/views/portfolio/ProjectEdit.vue'),
+        meta: { title: '编辑项目' }
+      },
+      {
+        path: 'portfolio/tags',
+        name: 'ProjectTagManage',
+        component: () => import('@/views/portfolio/ProjectTagManage.vue'),
+        meta: { title: '项目标签管理' }
+      },
+      {
         path: 'creation',
         name: 'CreationManage',
         component: () => import('@/views/creation/NovelManage.vue'),

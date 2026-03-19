@@ -49,6 +49,12 @@ public class SecurityConfig {
                         // 开放接口
                         .requestMatchers(
                                 "/api/v1/auth/**",
+                                "/api/v1/articles/**",
+                                "/api/v1/categories/**",
+                                "/api/v1/tags/**",
+                                "/api/v1/comments/**",
+                                "/api/v1/projects/**",
+                                "/api/v1/project-tags/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",

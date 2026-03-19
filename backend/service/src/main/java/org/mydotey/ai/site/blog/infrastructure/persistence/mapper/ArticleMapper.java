@@ -62,9 +62,9 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * 批量插入文章标签关联
      */
     @Insert("<script>" +
-            "INSERT INTO article_tag (id, article_id, tag_id, created_at) VALUES " +
+            "INSERT INTO article_tag (article_id, tag_id, created_at) VALUES " +
             "<foreach collection='tagIds' item='tagId' separator=','>" +
-            "(#{articleId}, #{articleId}, #{tagId}, NOW())" +
+            "(#{articleId}, #{tagId}, datetime('now', 'localtime'))" +
             "</foreach>" +
             "</script>")
     void insertArticleTags(@Param("articleId") Long articleId, @Param("tagIds") List<Long> tagIds);

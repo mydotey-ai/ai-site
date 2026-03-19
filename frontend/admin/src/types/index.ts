@@ -158,19 +158,69 @@ export interface CommentQuery extends PageQuery {
 // 项目/作品
 export interface Project {
   id: number
-  title: string
+  name: string
   slug: string
   description: string
   content: string
   coverImage: string
-  demoUrl: string
-  githubUrl: string
-  status: number
-  sortOrder: number
-  startedAt: string
-  endedAt: string
+  techStack: string[]
+  status: string
+  tags: ProjectTag[]
+  links: ProjectLink[]
   createdAt: string
   updatedAt: string
+}
+
+// 项目标签
+export interface ProjectTag {
+  id: number
+  name: string
+  slug: string
+  color: string
+  sort?: number
+  projectCount?: number
+}
+
+// 项目链接
+export interface ProjectLink {
+  type: string
+  label: string
+  url: string
+}
+
+// 项目请求
+export interface ProjectRequest {
+  name: string
+  slug?: string
+  description?: string
+  content?: string
+  coverImage?: string
+  techStack?: string[]
+  tagIds?: number[]
+  links?: ProjectLinkRequest[]
+  status?: string
+}
+
+// 项目链接请求
+export interface ProjectLinkRequest {
+  type: string
+  label: string
+  url: string
+}
+
+// 项目查询参数
+export interface ProjectQuery extends PageQuery {
+  tagId?: number
+  status?: string
+  keyword?: string
+}
+
+// 项目标签请求
+export interface ProjectTagRequest {
+  name: string
+  slug?: string
+  color?: string
+  sort?: number
 }
 
 // 小说
