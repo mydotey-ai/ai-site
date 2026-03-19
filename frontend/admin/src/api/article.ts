@@ -1,5 +1,5 @@
 import { http } from '@/utils/request'
-import type { Article, ArticleRequest, ArticleQuery, PageResult, ID } from '@/types'
+import type { Article, ArticleRequest, ArticleQuery, PageResult } from '@/types'
 
 export const articleApi = {
   /**
@@ -12,56 +12,56 @@ export const articleApi = {
   /**
    * 获取文章详情
    */
-  getById(id: ID): Promise<Article> {
+  getById(id: string | number): Promise<Article> {
     return http.get(`/v1/articles/${id}`)
   },
 
   /**
    * 创建文章
    */
-  create(data: ArticleRequest): Promise<ID> {
+  create(data: ArticleRequest): Promise<string | number> {
     return http.post('/v1/articles', data)
   },
 
   /**
    * 更新文章
    */
-  update(id: ID, data: ArticleRequest): Promise<void> {
+  update(id: string | number, data: ArticleRequest): Promise<void> {
     return http.put(`/v1/articles/${id}`, data)
   },
 
   /**
    * 删除文章
    */
-  delete(id: ID): Promise<void> {
+  delete(id: string | number): Promise<void> {
     return http.delete(`/v1/articles/${id}`)
   },
 
   /**
    * 发布文章
    */
-  publish(id: ID): Promise<void> {
+  publish(id: string | number): Promise<void> {
     return http.post(`/v1/articles/${id}/publish`)
   },
 
   /**
    * 取消发布文章
    */
-  unpublish(id: ID): Promise<void> {
+  unpublish(id: string | number): Promise<void> {
     return http.post(`/v1/articles/${id}/unpublish`)
   },
 
   /**
    * 置顶文章
    */
-  top(id: ID): Promise<void> {
+  top(id: string | number): Promise<void> {
     return http.post(`/v1/articles/${id}/top`)
   },
 
   /**
    * 取消置顶
    */
-  untop(id: ID): Promise<void> {
+  untop(id: string | number): Promise<void> {
     return http.post(`/v1/articles/${id}/untop`)
   }
 }

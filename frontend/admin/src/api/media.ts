@@ -16,8 +16,7 @@ import type {
   Folder,
   FolderRequest,
   BatchRequest,
-  PageResult,
-  ID
+  PageResult
 } from '@/types'
 
 // 图片 API
@@ -26,7 +25,7 @@ export const imageApi = {
     return http.get('/v1/images', { params })
   },
 
-  getById(id: ID): Promise<Image> {
+  getById(id: string | number): Promise<Image> {
     return http.get(`/v1/images/${id}`)
   },
 
@@ -36,11 +35,11 @@ export const imageApi = {
     })
   },
 
-  update(id: ID, data: ImageRequest): Promise<void> {
+  update(id: string | number, data: ImageRequest): Promise<void> {
     return http.put(`/v1/images/${id}`, data)
   },
 
-  delete(id: ID): Promise<void> {
+  delete(id: string | number): Promise<void> {
     return http.delete(`/v1/images/${id}`)
   },
 
@@ -55,19 +54,19 @@ export const albumApi = {
     return http.get('/v1/albums', { params })
   },
 
-  getById(id: ID): Promise<Album> {
+  getById(id: string | number): Promise<Album> {
     return http.get(`/v1/albums/${id}`)
   },
 
-  create(data: AlbumRequest): Promise<ID> {
+  create(data: AlbumRequest): Promise<string | number> {
     return http.post('/v1/albums', data)
   },
 
-  update(id: ID, data: AlbumRequest): Promise<void> {
+  update(id: string | number, data: AlbumRequest): Promise<void> {
     return http.put(`/v1/albums/${id}`, data)
   },
 
-  delete(id: ID): Promise<void> {
+  delete(id: string | number): Promise<void> {
     return http.delete(`/v1/albums/${id}`)
   }
 }
@@ -78,25 +77,25 @@ export const videoApi = {
     return http.get('/v1/videos', { params })
   },
 
-  getById(id: ID): Promise<Video> {
+  getById(id: string | number): Promise<Video> {
     return http.get(`/v1/videos/${id}`)
   },
 
-  create(data: VideoRequest): Promise<ID> {
+  create(data: VideoRequest): Promise<string | number> {
     return http.post('/v1/videos', data)
   },
 
-  upload(formData: FormData): Promise<ID> {
+  upload(formData: FormData): Promise<string | number> {
     return http.post('/v1/videos/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
   },
 
-  update(id: ID, data: VideoRequest): Promise<void> {
+  update(id: string | number, data: VideoRequest): Promise<void> {
     return http.put(`/v1/videos/${id}`, data)
   },
 
-  delete(id: ID): Promise<void> {
+  delete(id: string | number): Promise<void> {
     return http.delete(`/v1/videos/${id}`)
   }
 }
@@ -107,25 +106,25 @@ export const audioApi = {
     return http.get('/v1/audios', { params })
   },
 
-  getById(id: ID): Promise<Audio> {
+  getById(id: string | number): Promise<Audio> {
     return http.get(`/v1/audios/${id}`)
   },
 
-  create(data: AudioRequest): Promise<ID> {
+  create(data: AudioRequest): Promise<string | number> {
     return http.post('/v1/audios', data)
   },
 
-  upload(formData: FormData): Promise<ID> {
+  upload(formData: FormData): Promise<string | number> {
     return http.post('/v1/audios/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
   },
 
-  update(id: ID, data: AudioRequest): Promise<void> {
+  update(id: string | number, data: AudioRequest): Promise<void> {
     return http.put(`/v1/audios/${id}`, data)
   },
 
-  delete(id: ID): Promise<void> {
+  delete(id: string | number): Promise<void> {
     return http.delete(`/v1/audios/${id}`)
   }
 }
@@ -136,19 +135,19 @@ export const folderApi = {
     return http.get('/v1/folders', { params: { type } })
   },
 
-  getById(id: ID): Promise<Folder> {
+  getById(id: string | number): Promise<Folder> {
     return http.get(`/v1/folders/${id}`)
   },
 
-  create(data: FolderRequest): Promise<ID> {
+  create(data: FolderRequest): Promise<string | number> {
     return http.post('/v1/folders', data)
   },
 
-  update(id: ID, data: FolderRequest): Promise<void> {
+  update(id: string | number, data: FolderRequest): Promise<void> {
     return http.put(`/v1/folders/${id}`, data)
   },
 
-  delete(id: ID): Promise<void> {
+  delete(id: string | number): Promise<void> {
     return http.delete(`/v1/folders/${id}`)
   }
 }
