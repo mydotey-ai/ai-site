@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useMessage } from 'naive-ui'
+import { useMessage, NSpin, NEmpty } from 'naive-ui'
 import { videoApi, type Video } from '@/api/media'
 
 const router = useRouter()
@@ -49,7 +49,8 @@ onMounted(loadData)
 async function loadData() {
   loading.value = true
   try {
-    videos.value = await videoApi.getList()
+    const res = await videoApi.getList()
+    videos.value = res.list || []
   } catch (e: any) {
     message.error(e.message || '加载失败')
   } finally {

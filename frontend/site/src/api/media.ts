@@ -2,7 +2,7 @@ import { http } from '@/utils/request'
 import type { PageResult } from '@/types'
 
 // 公开 API 基础路径
-const API_PREFIX = '/api/v1'
+const API_PREFIX = '/v1'
 
 // 相册
 export interface Album {
@@ -12,6 +12,7 @@ export interface Album {
   description: string
   coverImage: string
   imageCount: number
+  images?: Image[]
   createdAt: string
 }
 
@@ -65,12 +66,8 @@ export const albumApi = {
     return http.get(`${API_PREFIX}/albums`)
   },
 
-  getBySlug(slug: string): Promise<Album> {
-    return http.get(`${API_PREFIX}/albums/${slug}`)
-  },
-
-  getImages(slug: string, page = 1, size = 20): Promise<PageResult<Image>> {
-    return http.get(`${API_PREFIX}/albums/${slug}/images`, { params: { page, size } })
+  getBySlug(slug: string, page = 1, size = 20): Promise<Album> {
+    return http.get(`${API_PREFIX}/albums/${slug}`, { params: { page, size } })
   }
 }
 

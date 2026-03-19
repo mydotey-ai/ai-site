@@ -7,6 +7,7 @@ import { MoonOutline, SunnyOutline, SearchOutline, MenuOutline, CloseOutline } f
 const route = useRoute()
 const isDark = ref(true)
 const isMobileMenuOpen = ref(false)
+const currentYear = new Date().getFullYear()
 
 const navLinks = [
   { to: '/', label: '首页' },
@@ -104,7 +105,7 @@ function closeMobileMenu() {
     <!-- 页脚 -->
     <footer class="footer">
       <div class="footer__container">
-        <p class="footer__copyright">&copy; 2024 AI-Site. All rights reserved.</p>
+        <p class="footer__copyright">&copy; {{ currentYear }} AI-Site. All rights reserved.</p>
       </div>
     </footer>
   </div>

@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useMessage } from 'naive-ui'
+import { useMessage, NSpin, NEmpty } from 'naive-ui'
 import { albumApi, type Album } from '@/api/media'
 
 const router = useRouter()
@@ -57,7 +57,7 @@ async function loadData() {
 }
 
 function goToAlbum(slug: string) {
-  router.push(`/gallery/${slug}`)
+  router.push(`/media/album/${slug}`)
 }
 </script>
 

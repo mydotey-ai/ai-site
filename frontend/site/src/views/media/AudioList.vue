@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useMessage } from 'naive-ui'
+import { useMessage, NSpin, NEmpty } from 'naive-ui'
 import { audioApi, type Audio } from '@/api/media'
 
 const message = useMessage()
@@ -47,7 +47,8 @@ onMounted(loadData)
 async function loadData() {
   loading.value = true
   try {
-    audios.value = await audioApi.getList()
+    const res = await audioApi.getList()
+    audios.value = res.list || []
   } catch (e: any) {
     message.error(e.message || '加载失败')
   } finally {

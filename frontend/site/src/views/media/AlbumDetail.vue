@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useMessage } from 'naive-ui'
+import { useMessage, NSpin, NEmpty, NButton, NModal } from 'naive-ui'
 import { albumApi, type Album, type Image } from '@/api/media'
 
 const route = useRoute()

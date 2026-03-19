@@ -64,7 +64,7 @@ export const projectTagApi = {
    * 获取标签列表
    */
   getList(): Promise<ProjectTag[]> {
-    return http.get('/api/v1/project-tags')
+    return http.get('/v1/project-tags')
   },
 
   /**
