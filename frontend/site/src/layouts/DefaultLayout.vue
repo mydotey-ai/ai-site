@@ -98,7 +98,7 @@ function closeMobileMenu() {
 
     <!-- 主内容区域 -->
     <main id="main-content" class="main">
-      <slot />
+      <router-view />
     </main>
 
     <!-- 页脚 -->

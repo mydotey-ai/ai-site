@@ -105,7 +105,7 @@ function handleMenuSelect(key: string) {
       />
     </NLayoutSider>
     <NLayoutContent class="admin-content">
-      <slot />
+      <router-view />
     </NLayoutContent>
   </NLayout>
 </template>

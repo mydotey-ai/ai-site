@@ -23,7 +23,7 @@ import java.util.List;
  * @author AI-Site
  */
 @RestController
-@RequestMapping("/admin/v1/comments")
+@RequestMapping("/api/admin/v1/comments")
 @Tag(name = "评论管理", description = "评论管理接口")
 @RequiredArgsConstructor
 public class CommentAdminController {
