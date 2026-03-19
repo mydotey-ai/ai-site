@@ -12,49 +12,49 @@ export const projectApi = {
   /**
    * 获取项目详情
    */
-  getById(id: string | number): Promise<Project> {
+  getById(id: bigint): Promise<Project> {
     return http.get(`/v1/projects/${id}`)
   },
 
   /**
    * 创建项目
    */
-  create(data: ProjectRequest): Promise<string | number> {
+  create(data: ProjectRequest): Promise<bigint> {
     return http.post('/v1/projects', data)
   },
 
   /**
    * 更新项目
    */
-  update(id: string | number, data: ProjectRequest): Promise<void> {
+  update(id: bigint, data: ProjectRequest): Promise<void> {
     return http.put(`/v1/projects/${id}`, data)
   },
 
   /**
    * 删除项目
    */
-  delete(id: string | number): Promise<void> {
+  delete(id: bigint): Promise<void> {
     return http.delete(`/v1/projects/${id}`)
   },
 
   /**
    * 发布项目
    */
-  release(id: string | number): Promise<void> {
+  release(id: bigint): Promise<void> {
     return http.post(`/v1/projects/${id}/release`)
   },
 
   /**
    * 归档项目
    */
-  archive(id: string | number): Promise<void> {
+  archive(id: bigint): Promise<void> {
     return http.post(`/v1/projects/${id}/archive`)
   },
 
   /**
    * 批量操作
    */
-  batch(action: string, ids: (string | number)[]): Promise<void> {
+  batch(action: string, ids: bigint[]): Promise<void> {
     return http.post('/v1/projects/batch', { action, ids })
   }
 }
@@ -70,21 +70,21 @@ export const projectTagApi = {
   /**
    * 创建标签
    */
-  create(data: ProjectTagRequest): Promise<string | number> {
+  create(data: ProjectTagRequest): Promise<bigint> {
     return http.post('/v1/project-tags', data)
   },
 
   /**
    * 更新标签
    */
-  update(id: string | number, data: ProjectTagRequest): Promise<void> {
+  update(id: bigint, data: ProjectTagRequest): Promise<void> {
     return http.put(`/v1/project-tags/${id}`, data)
   },
 
   /**
    * 删除标签
    */
-  delete(id: string | number): Promise<void> {
+  delete(id: bigint): Promise<void> {
     return http.delete(`/v1/project-tags/${id}`)
   }
 }

@@ -12,28 +12,28 @@ export const tagApi = {
   /**
    * 获取标签详情
    */
-  getById(id: string | number): Promise<Tag> {
+  getById(id: bigint): Promise<Tag> {
     return http.get(`/v1/tags/${id}`)
   },
 
   /**
    * 创建标签
    */
-  create(data: TagRequest): Promise<string | number> {
+  create(data: TagRequest): Promise<bigint> {
     return http.post('/v1/tags', data)
   },
 
   /**
    * 更新标签
    */
-  update(id: string | number, data: TagRequest): Promise<void> {
+  update(id: bigint, data: TagRequest): Promise<void> {
     return http.put(`/v1/tags/${id}`, data)
   },
 
   /**
    * 删除标签
    */
-  delete(id: string | number): Promise<void> {
+  delete(id: bigint): Promise<void> {
     return http.delete(`/v1/tags/${id}`)
   }
 }

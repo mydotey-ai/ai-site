@@ -19,28 +19,28 @@ export const categoryApi = {
   /**
    * 获取分类详情
    */
-  getById(id: string | number): Promise<Category> {
+  getById(id: bigint): Promise<Category> {
     return http.get(`/v1/categories/${id}`)
   },
 
   /**
    * 创建分类
    */
-  create(data: CategoryRequest): Promise<string | number> {
+  create(data: CategoryRequest): Promise<bigint> {
     return http.post('/v1/categories', data)
   },
 
   /**
    * 更新分类
    */
-  update(id: string | number, data: CategoryRequest): Promise<void> {
+  update(id: bigint, data: CategoryRequest): Promise<void> {
     return http.put(`/v1/categories/${id}`, data)
   },
 
   /**
    * 删除分类
    */
-  delete(id: string | number): Promise<void> {
+  delete(id: bigint): Promise<void> {
     return http.delete(`/v1/categories/${id}`)
   }
 }

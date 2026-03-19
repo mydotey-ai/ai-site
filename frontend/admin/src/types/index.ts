@@ -21,7 +21,7 @@ export interface PageQuery {
 
 // 用户相关类型
 export interface User {
-  id: string | number
+  id: bigint
   username: string
   email: string
   nickname: string
@@ -42,7 +42,7 @@ export interface UserRequest {
   avatar?: string
   bio?: string
   status?: number
-  roleIds?: (string | number)[]
+  roleIds?: bigint[]
 }
 
 // 用户查询参数
@@ -66,14 +66,14 @@ export interface LoginResponse {
 
 // 文章相关类型
 export interface Article {
-  id: string | number
+  id: bigint
   title: string
   slug: string
   summary: string
   content: string
   contentType: string
   coverImage: string
-  categoryId: string | number
+  categoryId: bigint
   category?: Category
   status: number
   viewCount: number
@@ -84,7 +84,7 @@ export interface Article {
   seoDescription: string
   seoKeywords: string
   publishedAt: string
-  authorId: string | number
+  authorId: bigint
   tags: Tag[]
   createdAt: string
   updatedAt: string
@@ -98,8 +98,8 @@ export interface ArticleRequest {
   content?: string
   contentType?: string
   coverImage?: string
-  categoryId?: string | number
-  tagIds?: (string | number)[]
+  categoryId?: bigint
+  tagIds?: bigint[]
   status?: number
   isTop?: number
   allowComment?: number
@@ -111,17 +111,17 @@ export interface ArticleRequest {
 // 文章查询参数
 export interface ArticleQuery extends PageQuery {
   status?: number
-  categoryId?: string | number
+  categoryId?: bigint
   keyword?: string
 }
 
 // 分类
 export interface Category {
-  id: string | number
+  id: bigint
   name: string
   slug: string
   description: string
-  parentId: string | number
+  parentId: bigint
   sortOrder: number
   articleCount: number
   createdAt: string
@@ -133,13 +133,13 @@ export interface CategoryRequest {
   name: string
   slug: string
   description?: string
-  parentId?: string | number
+  parentId?: bigint
   sortOrder?: number
 }
 
 // 标签
 export interface Tag {
-  id: string | number
+  id: bigint
   name: string
   slug: string
   color: string
@@ -157,9 +157,9 @@ export interface TagRequest {
 
 // 评论
 export interface Comment {
-  id: string | number
-  articleId: string | number
-  parentId: string | number
+  id: bigint
+  articleId: bigint
+  parentId: bigint
   nickname: string
   email: string
   website: string
@@ -173,12 +173,12 @@ export interface Comment {
 // 评论查询参数
 export interface CommentQuery extends PageQuery {
   status?: string
-  articleId?: string | number
+  articleId?: bigint
 }
 
 // 项目/作品
 export interface Project {
-  id: string | number
+  id: bigint
   name: string
   slug: string
   description: string
@@ -194,7 +194,7 @@ export interface Project {
 
 // 项目标签
 export interface ProjectTag {
-  id: string | number
+  id: bigint
   name: string
   slug: string
   color: string
@@ -217,7 +217,7 @@ export interface ProjectRequest {
   content?: string
   coverImage?: string
   techStack?: string[]
-  tagIds?: (string | number)[]
+  tagIds?: bigint[]
   links?: ProjectLinkRequest[]
   status?: string
 }
@@ -231,7 +231,7 @@ export interface ProjectLinkRequest {
 
 // 项目查询参数
 export interface ProjectQuery extends PageQuery {
-  tagId?: string | number
+  tagId?: bigint
   status?: string
   keyword?: string
 }
@@ -246,13 +246,13 @@ export interface ProjectTagRequest {
 
 // 小说
 export interface Novel {
-  id: string | number
+  id: bigint
   title: string
   slug: string
   author: string
   summary: string
   coverImage: string
-  categoryId: string | number
+  categoryId: bigint
   category?: NovelCategory
   status: string
   wordCount: number
@@ -264,7 +264,7 @@ export interface Novel {
 
 // 小说分类
 export interface NovelCategory {
-  id: string | number
+  id: bigint
   name: string
   slug: string
   sort: number
@@ -277,21 +277,21 @@ export interface NovelRequest {
   author?: string
   summary?: string
   coverImage?: string
-  categoryId?: string | number
+  categoryId?: bigint
   status?: string
 }
 
 // 小说查询参数
 export interface NovelQuery extends PageQuery {
-  categoryId?: string | number
+  categoryId?: bigint
   status?: string
   keyword?: string
 }
 
 // 章节
 export interface Chapter {
-  id: string | number
-  novelId: string | number
+  id: bigint
+  novelId: bigint
   novelTitle?: string
   title: string
   content: string
@@ -299,15 +299,15 @@ export interface Chapter {
   chapterNo: number
   status: string
   viewCount: number
-  prevChapterId?: string | number
-  nextChapterId?: string | number
+  prevChapterId?: bigint
+  nextChapterId?: bigint
   createdAt: string
   updatedAt: string
 }
 
 // 章节请求
 export interface ChapterRequest {
-  novelId: string | number
+  novelId: bigint
   title: string
   content?: string
   chapterNo?: number
@@ -316,7 +316,7 @@ export interface ChapterRequest {
 
 // 诗歌分类
 export interface PoetryCategory {
-  id: string | number
+  id: bigint
   name: string
   slug: string
   sort: number
@@ -324,12 +324,12 @@ export interface PoetryCategory {
 
 // 诗歌
 export interface Poetry {
-  id: string | number
+  id: bigint
   title: string
   slug: string
   author: string
   content: string
-  categoryId: string | number
+  categoryId: bigint
   category?: PoetryCategory
   status: string
   viewCount: number
@@ -343,20 +343,20 @@ export interface PoetryRequest {
   slug?: string
   author?: string
   content?: string
-  categoryId?: string | number
+  categoryId?: bigint
   status?: string
 }
 
 // 诗歌查询参数
 export interface PoetryQuery extends PageQuery {
-  categoryId?: string | number
+  categoryId?: bigint
   status?: string
   keyword?: string
 }
 
 // 散文分类
 export interface EssayCategory {
-  id: string | number
+  id: bigint
   name: string
   slug: string
   sort: number
@@ -364,13 +364,13 @@ export interface EssayCategory {
 
 // 散文
 export interface Essay {
-  id: string | number
+  id: bigint
   title: string
   slug: string
   author: string
   summary: string
   content: string
-  categoryId: string | number
+  categoryId: bigint
   category?: EssayCategory
   status: string
   viewCount: number
@@ -385,28 +385,28 @@ export interface EssayRequest {
   author?: string
   summary?: string
   content?: string
-  categoryId?: string | number
+  categoryId?: bigint
   status?: string
 }
 
 // 散文查询参数
 export interface EssayQuery extends PageQuery {
-  categoryId?: string | number
+  categoryId?: bigint
   status?: string
   keyword?: string
 }
 
 // 图片
 export interface Image {
-  id: string | number
+  id: bigint
   title: string
   description: string
   originalName: string
   url: string
   thumbnailUrl: string
-  albumId: string | number
+  albumId: bigint
   album?: AlbumVO
-  folderId: string | number
+  folderId: bigint
   width: number
   height: number
   size: number
@@ -421,15 +421,15 @@ export interface Image {
 export interface ImageRequest {
   title?: string
   description?: string
-  albumId?: string | number
-  folderId?: string | number
+  albumId?: bigint
+  folderId?: bigint
   tags?: string[]
   isPublic?: number
 }
 
 // 图片上传响应
 export interface ImageUploadResponse {
-  id: string | number
+  id: bigint
   title: string
   url: string
   thumbnailUrl: string
@@ -441,8 +441,8 @@ export interface ImageUploadResponse {
 
 // 图片查询参数
 export interface ImageQuery extends PageQuery {
-  albumId?: string | number
-  folderId?: string | number
+  albumId?: bigint
+  folderId?: bigint
   keyword?: string
   isPublic?: number
 }
@@ -450,14 +450,14 @@ export interface ImageQuery extends PageQuery {
 // 批量操作请求
 export interface BatchRequest {
   action: 'move' | 'delete' | 'setPublic' | 'setPrivate'
-  ids: (string | number)[]
-  targetAlbumId?: string | number
-  targetFolderId?: string | number
+  ids: bigint[]
+  targetAlbumId?: bigint
+  targetFolderId?: bigint
 }
 
 // 相册
 export interface Album {
-  id: string | number
+  id: bigint
   name: string
   slug: string
   description: string
@@ -487,14 +487,14 @@ export interface AlbumQuery extends PageQuery {
 
 // 相册 VO（嵌套在图片响应中）
 export interface AlbumVO {
-  id: string | number
+  id: bigint
   name: string
   slug: string
 }
 
 // 视频
 export interface Video {
-  id: string | number
+  id: bigint
   title: string
   description: string
   coverImage: string
@@ -535,7 +535,7 @@ export interface VideoQuery extends PageQuery {
 
 // 音频
 export interface Audio {
-  id: string | number
+  id: bigint
   title: string
   description: string
   coverImage: string
@@ -575,9 +575,9 @@ export interface AudioQuery extends PageQuery {
 
 // 文件夹
 export interface Folder {
-  id: string | number
+  id: bigint
   name: string
-  parentId: string | number
+  parentId: bigint
   type: string
   sort: number
   createdAt: string
@@ -587,7 +587,7 @@ export interface Folder {
 // 文件夹请求
 export interface FolderRequest {
   name: string
-  parentId?: string | number
+  parentId?: bigint
   type: string
   sort?: number
 }

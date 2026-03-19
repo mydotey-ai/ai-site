@@ -2,8 +2,13 @@ import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse 
 import JSONBig from 'json-bigint'
 import type { Result } from '@/types'
 
-// 配置 json-bigint：大数字转为字符串，避免精度丢失
-const jsonBig = JSONBig({ storeAsString: true })
+// 配置 json-bigint：使用原生 BigInt 类型
+const jsonBig = JSONBig({ useNativeBigInt: true })
+
+// BigInt 序列化转换器
+function bigIntReplacer(_key: string, value: unknown): unknown {
+  return typeof value === 'bigint' ? value.toString() : value
+}
 
 // 创建 axios 实例
 const request: AxiosInstance = axios.create({
@@ -23,6 +28,15 @@ const request: AxiosInstance = axios.create({
         }
       }
       return data
+    }
+  ],
+  // 发送请求时将 BigInt 转为字符串
+  transformRequest: [
+    (data) => {
+      if (data instanceof FormData) {
+        return data
+      }
+      return JSON.stringify(data, bigIntReplacer)
     }
   ]
 })

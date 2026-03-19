@@ -12,7 +12,7 @@ export const userApi = {
   /**
    * 获取用户详情
    */
-  getById(id: string | number): Promise<User> {
+  getById(id: bigint): Promise<User> {
     return http.get(`/v1/users/${id}`)
   },
 
@@ -26,28 +26,28 @@ export const userApi = {
   /**
    * 创建用户
    */
-  create(data: UserRequest): Promise<string | number> {
+  create(data: UserRequest): Promise<bigint> {
     return http.post('/v1/users', data)
   },
 
   /**
    * 更新用户
    */
-  update(id: string | number, data: UserRequest): Promise<void> {
+  update(id: bigint, data: UserRequest): Promise<void> {
     return http.put(`/v1/users/${id}`, data)
   },
 
   /**
    * 删除用户
    */
-  delete(id: string | number): Promise<void> {
+  delete(id: bigint): Promise<void> {
     return http.delete(`/v1/users/${id}`)
   },
 
   /**
    * 更新用户状态
    */
-  updateStatus(id: string | number, status: number): Promise<void> {
+  updateStatus(id: bigint, status: number): Promise<void> {
     return http.put(`/v1/users/${id}/status`, null, { params: { status } })
   }
 }

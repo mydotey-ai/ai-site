@@ -13,31 +13,31 @@ export const novelApi = {
     return http.get('/v1/novels', { params })
   },
 
-  getById(id: string | number): Promise<Novel> {
+  getById(id: bigint): Promise<Novel> {
     return http.get(`/v1/novels/${id}`)
   },
 
-  create(data: NovelRequest): Promise<string | number> {
+  create(data: NovelRequest): Promise<bigint> {
     return http.post('/v1/novels', data)
   },
 
-  update(id: string | number, data: NovelRequest): Promise<void> {
+  update(id: bigint, data: NovelRequest): Promise<void> {
     return http.put(`/v1/novels/${id}`, data)
   },
 
-  delete(id: string | number): Promise<void> {
+  delete(id: bigint): Promise<void> {
     return http.delete(`/v1/novels/${id}`)
   },
 
-  publish(id: string | number): Promise<void> {
+  publish(id: bigint): Promise<void> {
     return http.post(`/v1/novels/${id}/publish`)
   },
 
-  complete(id: string | number): Promise<void> {
+  complete(id: bigint): Promise<void> {
     return http.post(`/v1/novels/${id}/complete`)
   },
 
-  batch(action: string, ids: (string | number)[]): Promise<void> {
+  batch(action: string, ids: bigint[]): Promise<void> {
     return http.post('/v1/novels/batch', { action, ids })
   },
 
@@ -45,31 +45,31 @@ export const novelApi = {
     return http.get('/v1/novels/categories')
   },
 
-  getChapters(novelId: string | number): Promise<Chapter[]> {
+  getChapters(novelId: bigint): Promise<Chapter[]> {
     return http.get(`/v1/novels/${novelId}/chapters`)
   },
 
-  getChapter(chapterId: string | number): Promise<Chapter> {
+  getChapter(chapterId: bigint): Promise<Chapter> {
     return http.get(`/v1/novels/chapters/${chapterId}`)
   },
 
-  createChapter(novelId: string | number, data: ChapterRequest): Promise<string | number> {
+  createChapter(novelId: bigint, data: ChapterRequest): Promise<bigint> {
     return http.post(`/v1/novels/${novelId}/chapters`, data)
   },
 
-  updateChapter(chapterId: string | number, data: ChapterRequest): Promise<void> {
+  updateChapter(chapterId: bigint, data: ChapterRequest): Promise<void> {
     return http.put(`/v1/novels/chapters/${chapterId}`, data)
   },
 
-  deleteChapter(chapterId: string | number): Promise<void> {
+  deleteChapter(chapterId: bigint): Promise<void> {
     return http.delete(`/v1/novels/chapters/${chapterId}`)
   },
 
-  publishChapter(chapterId: string | number): Promise<void> {
+  publishChapter(chapterId: bigint): Promise<void> {
     return http.post(`/v1/novels/chapters/${chapterId}/publish`)
   },
 
-  batchChapters(action: string, ids: (string | number)[]): Promise<void> {
+  batchChapters(action: string, ids: bigint[]): Promise<void> {
     return http.post('/v1/novels/chapters/batch', { action, ids })
   }
 }
@@ -80,27 +80,27 @@ export const poetryApi = {
     return http.get('/v1/poetry', { params })
   },
 
-  getById(id: string | number): Promise<Poetry> {
+  getById(id: bigint): Promise<Poetry> {
     return http.get(`/v1/poetry/${id}`)
   },
 
-  create(data: PoetryRequest): Promise<string | number> {
+  create(data: PoetryRequest): Promise<bigint> {
     return http.post('/v1/poetry', data)
   },
 
-  update(id: string | number, data: PoetryRequest): Promise<void> {
+  update(id: bigint, data: PoetryRequest): Promise<void> {
     return http.put(`/v1/poetry/${id}`, data)
   },
 
-  delete(id: string | number): Promise<void> {
+  delete(id: bigint): Promise<void> {
     return http.delete(`/v1/poetry/${id}`)
   },
 
-  publish(id: string | number): Promise<void> {
+  publish(id: bigint): Promise<void> {
     return http.post(`/v1/poetry/${id}/publish`)
   },
 
-  batch(action: string, ids: (string | number)[]): Promise<void> {
+  batch(action: string, ids: bigint[]): Promise<void> {
     return http.post('/v1/poetry/batch', { action, ids })
   },
 
@@ -115,27 +115,27 @@ export const essayApi = {
     return http.get('/v1/essays', { params })
   },
 
-  getById(id: string | number): Promise<Essay> {
+  getById(id: bigint): Promise<Essay> {
     return http.get(`/v1/essays/${id}`)
   },
 
-  create(data: EssayRequest): Promise<string | number> {
+  create(data: EssayRequest): Promise<bigint> {
     return http.post('/v1/essays', data)
   },
 
-  update(id: string | number, data: EssayRequest): Promise<void> {
+  update(id: bigint, data: EssayRequest): Promise<void> {
     return http.put(`/v1/essays/${id}`, data)
   },
 
-  delete(id: string | number): Promise<void> {
+  delete(id: bigint): Promise<void> {
     return http.delete(`/v1/essays/${id}`)
   },
 
-  publish(id: string | number): Promise<void> {
+  publish(id: bigint): Promise<void> {
     return http.post(`/v1/essays/${id}/publish`)
   },
 
-  batch(action: string, ids: (string | number)[]): Promise<void> {
+  batch(action: string, ids: bigint[]): Promise<void> {
     return http.post('/v1/essays/batch', { action, ids })
   },
 

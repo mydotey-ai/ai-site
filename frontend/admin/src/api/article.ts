@@ -12,56 +12,56 @@ export const articleApi = {
   /**
    * 获取文章详情
    */
-  getById(id: string | number): Promise<Article> {
+  getById(id: bigint): Promise<Article> {
     return http.get(`/v1/articles/${id}`)
   },
 
   /**
    * 创建文章
    */
-  create(data: ArticleRequest): Promise<string | number> {
+  create(data: ArticleRequest): Promise<bigint> {
     return http.post('/v1/articles', data)
   },
 
   /**
    * 更新文章
    */
-  update(id: string | number, data: ArticleRequest): Promise<void> {
+  update(id: bigint, data: ArticleRequest): Promise<void> {
     return http.put(`/v1/articles/${id}`, data)
   },
 
   /**
    * 删除文章
    */
-  delete(id: string | number): Promise<void> {
+  delete(id: bigint): Promise<void> {
     return http.delete(`/v1/articles/${id}`)
   },
 
   /**
    * 发布文章
    */
-  publish(id: string | number): Promise<void> {
+  publish(id: bigint): Promise<void> {
     return http.post(`/v1/articles/${id}/publish`)
   },
 
   /**
    * 取消发布文章
    */
-  unpublish(id: string | number): Promise<void> {
+  unpublish(id: bigint): Promise<void> {
     return http.post(`/v1/articles/${id}/unpublish`)
   },
 
   /**
    * 置顶文章
    */
-  top(id: string | number): Promise<void> {
+  top(id: bigint): Promise<void> {
     return http.post(`/v1/articles/${id}/top`)
   },
 
   /**
    * 取消置顶
    */
-  untop(id: string | number): Promise<void> {
+  untop(id: bigint): Promise<void> {
     return http.post(`/v1/articles/${id}/untop`)
   }
 }
