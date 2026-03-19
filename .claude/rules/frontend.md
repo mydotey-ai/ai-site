@@ -88,6 +88,7 @@ frontend/
 - 使用 `type` 定义联合类型、工具类型
 - 避免使用 `any`，使用泛型或 `unknown`
 - 开启 strict mode
+- **后端 `Long` 类型字段使用 `bigint`**：通过 `json-bigint` 处理大数字精度问题
 
 ### API 请求规范
 
