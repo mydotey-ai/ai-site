@@ -6,7 +6,7 @@ const API_PREFIX = '/v1'
 
 // 相册
 export interface Album {
-  id: number
+  id: bigint
   name: string
   slug: string
   description: string
@@ -18,7 +18,7 @@ export interface Album {
 
 // 图片
 export interface Image {
-  id: number
+  id: bigint
   title: string
   description: string
   url: string
@@ -26,13 +26,13 @@ export interface Image {
   width: number
   height: number
   size: number
-  albumId: number
+  albumId: bigint
   createdAt: string
 }
 
 // 视频
 export interface Video {
-  id: number
+  id: bigint
   title: string
   description: string
   coverImage: string
@@ -47,7 +47,7 @@ export interface Video {
 
 // 音频
 export interface Audio {
-  id: number
+  id: bigint
   title: string
   description: string
   coverImage: string
@@ -77,7 +77,7 @@ export const videoApi = {
     return http.get(`${API_PREFIX}/videos`, { params: { page, size } })
   },
 
-  getById(id: number): Promise<Video> {
+  getById(id: bigint): Promise<Video> {
     return http.get(`${API_PREFIX}/videos/${id}`)
   }
 }
@@ -88,7 +88,7 @@ export const audioApi = {
     return http.get(`${API_PREFIX}/audios`, { params: { page, size } })
   },
 
-  getById(id: number): Promise<Audio> {
+  getById(id: bigint): Promise<Audio> {
     return http.get(`${API_PREFIX}/audios/${id}`)
   }
 }

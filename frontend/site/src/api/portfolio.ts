@@ -12,7 +12,7 @@ export const portfolioApi = {
   /**
    * 根据ID获取项目
    */
-  getProjectById(id: number): Promise<Project> {
+  getProjectById(id: bigint): Promise<Project> {
     return http.get(`/v1/projects/${id}`)
   },
 

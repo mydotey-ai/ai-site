@@ -12,7 +12,7 @@ export const blogApi = {
   /**
    * 根据ID获取文章
    */
-  getArticleById(id: number): Promise<Article> {
+  getArticleById(id: bigint): Promise<Article> {
     return http.get(`/v1/articles/${id}`)
   },
 
@@ -26,7 +26,7 @@ export const blogApi = {
   /**
    * 获取相关文章
    */
-  getRelatedArticles(id: number, limit = 5): Promise<Article[]> {
+  getRelatedArticles(id: bigint, limit = 5): Promise<Article[]> {
     return http.get(`/v1/articles/${id}/related`, { params: { limit } })
   },
 
@@ -40,21 +40,21 @@ export const blogApi = {
   /**
    * 获取文章评论
    */
-  getComments(articleId: number): Promise<Comment[]> {
+  getComments(articleId: bigint): Promise<Comment[]> {
     return http.get(`/v1/comments/article/${articleId}`)
   },
 
   /**
    * 提交评论
    */
-  submitComment(data: CommentRequest): Promise<number> {
+  submitComment(data: CommentRequest): Promise<bigint> {
     return http.post('/v1/comments', data)
   },
 
   /**
    * 点赞评论
    */
-  likeComment(id: number): Promise<void> {
+  likeComment(id: bigint): Promise<void> {
     return http.post(`/v1/comments/${id}/like`)
   }
 }

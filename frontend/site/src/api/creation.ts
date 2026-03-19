@@ -12,7 +12,7 @@ export const creationApi = {
     return http.get('/v1/novels', { params })
   },
 
-  getNovelById(id: number): Promise<Novel> {
+  getNovelById(id: bigint): Promise<Novel> {
     return http.get(`/v1/novels/${id}`)
   },
 
@@ -24,11 +24,11 @@ export const creationApi = {
     return http.get('/v1/novels/categories')
   },
 
-  getChapters(novelId: number): Promise<Chapter[]> {
+  getChapters(novelId: bigint): Promise<Chapter[]> {
     return http.get(`/v1/novels/${novelId}/chapters`)
   },
 
-  getChapter(chapterId: number): Promise<Chapter> {
+  getChapter(chapterId: bigint): Promise<Chapter> {
     return http.get(`/v1/novels/chapters/${chapterId}`)
   },
 
@@ -37,7 +37,7 @@ export const creationApi = {
     return http.get('/v1/poetry', { params })
   },
 
-  getPoetryById(id: number): Promise<Poetry> {
+  getPoetryById(id: bigint): Promise<Poetry> {
     return http.get(`/v1/poetry/${id}`)
   },
 
@@ -54,7 +54,7 @@ export const creationApi = {
     return http.get('/v1/essays', { params })
   },
 
-  getEssayById(id: number): Promise<Essay> {
+  getEssayById(id: bigint): Promise<Essay> {
     return http.get(`/v1/essays/${id}`)
   },
 
