@@ -9,28 +9,6 @@
 
 ---
 
-## Git 规范
-
-### 分支命名
-
-| 类型 | 格式 | 示例 |
-|------|------|------|
-| 功能 | `feature/<name>` | `feature/user-auth` |
-| 修复 | `bugfix/<name>` | `bugfix/login-error` |
-| 紧急修复 | `hotfix/<name>` | `hotfix/security-patch` |
-| 发布 | `release/v<version>` | `release/v1.0.0` |
-| 文档 | `docs/<name>` | `docs/api-guide` |
-
-### Commit 规范
-
-```
-<type>(<scope>): <subject>
-```
-
-**Type**: `feat` | `fix` | `docs` | `style` | `refactor` | `test` | `chore` | `perf`
-
----
-
 ## Code Review 清单
 
 - [ ] 代码是否符合规范
