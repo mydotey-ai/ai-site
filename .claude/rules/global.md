@@ -27,12 +27,3 @@
 
 ---
 
-## Phase/Plan 完成流程
-
-当一个 Phase 完成时，**必须**检查和更新相关文档：
-
-1. **更新 Phase 文档** (`/docs/plans/phases/phase-X-xxx.md`)
-2. **更新计划总览** (`/docs/plans/README.md`)
-3. **同步更新相关文档**
-
-   参考 `/docs/README.md` 更新所有相关文档，新文档按目录规范创建。
